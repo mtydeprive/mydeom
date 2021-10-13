@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>显示隐藏效果</title>
+	<style>
+		.box{
+			display: block;
+		}
+		.box img{
+			display: block;
+		}
+		.hide{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<img src="./img/g3.jpg" alt="">
+	</div>
+	<p>
+		<button id="btn">显示/隐藏</button>
+	</p>
+	<script src="./js/jquery-3.1.1.js"></script>
+	<script>
+		//原生js写法
+		// const box=document.querySelector('.box')
+		// const btn=document.querySelector('#btn')
+
+		// let visibility=true;
+		// btn.onclick=function(){
+		// 	if (visibility) {
+		// 		box.style.display='none';
+		// 	}else{
+		// 		box.style.display="block"
+		// 	}
+		// 	visibility=!visibility
+		// }
+
+		//jQuery写法
+		jQuery(function($){
+			let visibility=true;
+			const $box=$('.box')
+			const $btn=$('#btn')
+			//方法一
+			// $btn.on('click',function(){
+			// 	if (visibility) {
+			// 		// $box.css({display:'none'})
+			// 		$box.css('display','none')
+			// 	}else{
+			// 		// $box.css({display:'block'})
+			// 		$box.css('display','block')
+			// 	}
+			// 	visibility=!visibility
+			// })
+
+			//方法二
+			// $btn.on('click',function(){
+			// 	if ($box.css('display')=='none') {
+			// 		$box.show()
+			// 	}else{
+			// 		$box.hide()
+			// 	}
+			// })
+			
+			//方法三
+			// $btn.click(function(){
+			// 	//toggle()  显示隐藏状态切换
+			// 	$box.toggle()
+			// })
+
+			//方法四
+			$btn.click(function(){
+				$box.toggleClass('hide')
+			})
+		})
+	</script>
+</body>
+</html>

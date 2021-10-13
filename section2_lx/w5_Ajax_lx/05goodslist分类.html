@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #goodslist {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #goodslist li {
+            width: 250px;
+            height: 450px;
+            list-style: none;
+            margin: 10px;
+            text-align: center;
+        }
+
+        #goodslist li img {
+            width: 100%;
+        }
+
+        .price del {
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .price span {
+            color: #f00;
+        }
+
+        .price del::before,
+        .price span::before {
+            content: '￥';
+        }
+    </style>
+</head>
+
+<body>
+    <h1>分类</h1>
+    <select id="category">
+
+    </select>
+    <div id="goodslist">
+    </div>
+
+    <script>
+        /* 
+        分类
+         */
+        const goodslist = document.querySelector("#goodslist")
+        const category = document.querySelector("#category")
+        //1.创建一个异步请求对象(ajax请求)
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            const { data } = JSON.parse(xhr.responseText)
+            console.log(data);
+            const lis = data.result.map(item => {
+                return `<li><a href="http://120.76.247.5:2003/api/goods/:id=${item.goods_id}">
+                    <img src="http://120.76.247.5:2003${item.img_url}">
+                    <h4>${item.goods_name}</h4>
+                    <p>类型：${item.category}</p>
+                    <p class="price">原价：<del>${item.price}</del><br>现价：<span>${item.sales_price}</span></p>
+                    </a></li>`
+            })
+            goodslist.innerHTML = lis.join('')
+
+        }
+        //2.设置请求参数，建立与服务器连接:xhr.open(请求类型,接口地址,是否异步请求)
+        xhr.open('get', 'http://120.76.247.5:2003/api/goods', true)
+        // //3.向服务器发起请求:xhr.send()
+        xhr.send()
+
+        //获取商品分类
+        const xhr_category = new XMLHttpRequest();
+        xhr_category.onload = function () {
+            const { data } = JSON.parse(xhr_category.responseText)
+
+            category.innerHTML = data.result.map(item => {
+                return `<option value="${item.text}">${item.text}</option>`
+            }).join('')
+        }
+        xhr_category.open('get', 'http://120.76.247.5:2003/api/category');
+        xhr_category.send()
+
+        //根据分类显示相应的数据
+        category.onchange = function () {
+            const cat = this.value;
+
+            xhr.open('get', 'http://120.76.247.5:2003/api/goods?category=' + cat, true)
+
+            xhr.send()
+        }
+    </script>
+</body>
+
+</html>

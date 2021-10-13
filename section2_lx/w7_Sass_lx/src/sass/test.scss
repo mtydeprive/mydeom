@@ -1,0 +1,179 @@
+@use "sass:math";
+
+@import './var';
+
+$mainColor:#666;
+$highCOlor:#fc0;
+$secondaryColor:lighten($mainColor,10%);
+$darkColor:darken($mainColor,10%);
+//引入：把var.sass中的代码拷贝到当前文件
+
+//多值变量
+//1.list类型
+$pd:5px 10px 20px 30px;
+//2.map类型
+$headings:(h1:2em, h2:1.5em, h3:1.2em);
+
+//浮动方向
+$direction:right;
+
+a {
+    font-size: $fontSize;
+    color: $mainColor;
+
+    &:hover {
+        color: $highCOlor;
+    }
+}
+
+h1 {
+    font-size: map-get($headings, h1);
+}
+
+.list {
+    padding: nth($pd, 1);
+
+    li {
+        float: $direction;
+        border-#{$direction}: 1px solid #900;
+    }
+}
+
+//利用循环语句实现h1到h6字体大小
+@for $i from 1 through 6 {
+    h#{$i} {
+        font-size: math.div(36, $i)px;
+    }
+}
+
+// @for $i from 1 to 6{
+
+// }
+$type:salePrice;
+
+.price {
+  color:getColor($type);
+  border-color: getColor($type:huodong);
+  background-color: getColor();
+}
+
+.col-3{
+    width: percentage(math.div(1,3));
+}
+.text{
+    color: $secondaryColor;
+}
+.text{
+    color: $darkColor;
+}
+
+.title{
+    font-size: $bigFontSize;
+}
+.sub-title{
+    font-size: $smallFontSize;
+    padding: 10px-3;
+}
+
+
+//复用与继承
+.price{
+    padding: 10px;
+    font-size: 16px;
+    del{
+        color: #58bc58;
+        &::before{
+            content: '￥';
+        }
+    }
+    span{
+        @extend del;
+        color: pink;
+    }
+}
+
+.sale-prire{
+    @extend .price;
+}
+
+//占位符 (不会编译成具体样式，一般用于继承 )
+%box{
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+}
+.goodslist{
+    @extend %box;
+    border-width: 2px;
+}
+.cartlist{
+    @extend %box;
+    li{
+        float: left;
+        width: 200px;
+        height: 100px;
+    }
+}
+
+
+//mixin混合器 （复制）
+//1.无参数mixin （更推荐使用继承）
+@mixin important-text {
+    color: red;
+    font-size: 25px;
+    font-weight: bold;
+    border: 1px solid blue;
+}
+
+.content{
+    @include important-text;
+}
+.disciption{
+    @include important-text;
+    color: pink;
+}
+
+//2.带参数mixin
+// @media only screen and ( max-width: 800px )
+// {
+//     .dd{
+//         font-size: 18px;
+//     }
+//     .ti{
+//         color: plum;
+//     }
+// }
+// @media only screen and ( max-width: 600px )
+// {
+//     .dd{
+//         font-size: 14px;
+//     }
+//     .ti{
+//         color: powderblue;
+//     }
+// }
+
+@mixin max-screen($width){
+    @media only screen and ( max-width: $width )
+    {
+        //@content表示使用mixin时传入的样式
+      @content;
+    }
+  }
+
+  @include max-screen(800px){
+          .dd{
+        font-size: 18px;
+    }
+    .ti{
+        color: plum;
+    }
+  }
+  @include max-screen(600px){
+          .dd{
+        font-size: 18px;
+    }
+    .ti{
+        color: plum;
+    }
+  }

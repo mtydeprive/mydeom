@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise</title>
+</head>
+
+<body>
+    <h1>Promise</h1>
+
+    <script>
+        /*
+       06.Promise
+           * resolve
+           * reject
+       * 原型方法
+           * then
+           * catch
+       *promise状态
+           *fulfilled（成功） 可以理解为成功的状态
+           * Rejected（失败） 可以理解为失败的状态
+   */
+
+        //实例化一个promise对象
+        // const promise=new Promise(function(resolve,reject){
+        //     console.log('我承诺：再也不敢了');
+
+        //     setTimeout(()=>{
+        //         // resolve('fail')
+
+
+        //         reject('success')
+        //     },3000)
+        // })
+        // promise.then(function(data){
+        //     //成功：这里代码在promise状态变成fulfilled后执行
+        //     console.log(data,'真的不能再真了');
+        // })
+        // promise.catch(function(reason){
+        //     //失败：这里代码在promise状态变成rejected后执行
+        //     console.log(reason,'就这啊？被骗了吧');
+        // })
+
+        // 创建一个状态为`Fulfilled`的promise对象
+        // const promise1=Promise.resolve('zhangsan');
+        // console.log('promise',promise1);
+
+        //静态方法（类方法）
+        // 创建一个状态为`Rejected`的promise对象
+        // const promise2=Promise.reject('lisi')
+        // console.log('promise2',promise2);
+
+
+    </script>
+</body>
+
+</html>

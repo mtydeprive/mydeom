@@ -1,0 +1,135 @@
+@charset "UTF-8";
+a {
+  font-size: 16px;
+  color: #666;
+}
+a:hover {
+  color: #fc0;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+.list {
+  padding: 5px;
+}
+.list li {
+  float: right;
+  border-right: 1px solid #900;
+}
+
+h1 {
+  font-size: 36 px;
+}
+
+h2 {
+  font-size: 18 px;
+}
+
+h3 {
+  font-size: 12 px;
+}
+
+h4 {
+  font-size: 9 px;
+}
+
+h5 {
+  font-size: 7.2 px;
+}
+
+h6 {
+  font-size: 6 px;
+}
+
+.price, .sale-prire {
+  color: blue;
+  border-color: #f60;
+  background-color: black;
+}
+
+.col-3 {
+  width: 33.3333333333%;
+}
+
+.text {
+  color: gray;
+}
+
+.text {
+  color: #4d4d4d;
+}
+
+.title {
+  font-size: 19.2px;
+}
+
+.sub-title {
+  font-size: 12.8px;
+  padding: 7px;
+}
+
+.price, .sale-prire {
+  padding: 10px;
+  font-size: 16px;
+}
+.price del, .sale-prire del, .price span, .sale-prire span {
+  color: #58bc58;
+}
+.price del::before, .sale-prire del::before, .price span::before, .sale-prire span::before {
+  content: "￥";
+}
+.price span, .sale-prire span {
+  color: pink;
+}
+
+.cartlist, .goodslist {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+}
+
+.goodslist {
+  border-width: 2px;
+}
+
+.cartlist li {
+  float: left;
+  width: 200px;
+  height: 100px;
+}
+
+.content {
+  color: red;
+  font-size: 25px;
+  font-weight: bold;
+  border: 1px solid blue;
+}
+
+.disciption {
+  color: red;
+  font-size: 25px;
+  font-weight: bold;
+  border: 1px solid blue;
+  color: pink;
+}
+
+@media only screen and (max-width: 800px) {
+  .dd {
+    font-size: 18px;
+  }
+
+  .ti {
+    color: plum;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .dd {
+    font-size: 18px;
+  }
+
+  .ti {
+    color: plum;
+  }
+}
