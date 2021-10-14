@@ -45,30 +45,30 @@ function request(options={}){
 } 
 
 // request.get('/login',{username:'laoxie',password:123456})
-request.get=function(url,data){
-    return request({
-        url,
-        data
-    })
-}
-request.post=function(url,data){
-    return request({
-        url,
-        method:'post',
-        data
-    })
-}
-request.put=function(url,data){
-    return request({
-        url,
-        method:'put',
-        data
-    })
-}
-request.delete=function(url,data){
-    return request({
-        url,
-        method:'delete',
-        data
-    })
-}
+// request.get=function(url,data){
+//     return request({
+//         url,
+//         data
+//     })
+// }
+// request.post=function(url,data){
+//     return request({
+//         url,
+//         method:'post',
+//         data
+//     })
+// }
+// request.put=function(url,data){
+//     return request({
+//         url,
+//         method:'put',
+//         data
+//     })
+// }
+// request.delete=function(url,data){
+//     return request({
+//         url,
+//         method:'delete',
+//         data
+//     })
+// }
