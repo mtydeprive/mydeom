@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <h1>首页</h1>
+    <img src="./img/g1.jpg" alt="">
+    <div class="userlist">
+
+    </div>
+    <div class="goodslist">
+        
+    </div>
+    <!-- <script src="./js/request.js"></script> -->
+    <script>
+        const goodslist=document.querySelector('.goodslist')
+        const userlist=document.querySelector('.userlist')
+        const xhr=new XMLHttpRequest()
+        xhr.onload=function(){
+            const data=JSON.parse(xhr.responseText);
+            userlist.innerHTML=data.data.map(item=>{
+                return`
+                    <li>${item.username}:${item.password}
+                    <button class="btn" data-id="${item.id}">修改密码</button>    
+                    </li>
+                `
+            }).join('')
+
+        }
+        xhr.open('get','http://localhost:2108/api/user/list',true)
+        xhr.send()
+
+        const xhrshr=new XMLHttpRequest()
+        xhrshr.onload=function(){
+            const data=JSON.parse(xhrshr.responseText);
+            goodslist.innerHTML=data.data.map(item=>{
+                return`
+                <li>
+                  <h4>${item.goods_name}</h4> 
+                  <p>${item.category}</p>
+                  <a>${item.price}</a>   
+                  </li>
+                `
+            }).join('')
+
+        }
+        xhrshr.open('get','http://localhost:2108/api/goods/list',true)
+        xhrshr.send()
+
+
+
+
+        userlist.onclick=(e)=>{
+            if(e.target.classList.contains('btn')){
+                const {id}=e.target.dataset;
+                const xhr=new XMLHttpRequest()
+                xhr.open('put','http://localhost:2108/api/user/'+id,true)
+                // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+                xhr.setRequestHeader('Content-Type','application/json')
+                xhr.send(`{"password":"556"}`)
+            }
+        }
+
+
+        // request.get({
+        //     url:'/goods/list',
+        //     data:6,
+        // }).then(({data})=>{
+        //     console.log("data",data);
+        //     goodslist.innerHTML=data.map(item=>{
+        //         return `
+        //             <li>
+        //             <h4>${item.goods_name}</h4> 
+        //             <p>${item.category}</p>
+        //             <a>${item.price}</a>   
+        //             </li>
+        //         `
+        //     }).join('')
+        // })
+   </script>
+</body>
+</html>
