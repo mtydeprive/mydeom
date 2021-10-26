@@ -18,6 +18,7 @@ router.use((req,res,next)=>{
 
     //处理复杂跨域中的预检请求
     if(req.method=='OPTIONS'){
+        //设置响应头
         res.set({
             "Access-Control-Allow-Headers":"Content-Type,Content-Length,Authorization,Accept,X-Requested-With","Access-Control-Allow-Methods":"PUT,POST,GET,PATCH,DELETE,OPTIONS"
         });
