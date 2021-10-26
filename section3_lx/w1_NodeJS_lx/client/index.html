@@ -13,75 +13,34 @@
     <div class="userlist">
 
     </div>
-    <div class="goodslist">
-        
-    </div>
-    <!-- <script src="./js/request.js"></script> -->
     <script>
-        const goodslist=document.querySelector('.goodslist')
-        const userlist=document.querySelector('.userlist')
-        const xhr=new XMLHttpRequest()
-        xhr.onload=function(){
-            const data=JSON.parse(xhr.responseText);
-            userlist.innerHTML=data.data.map(item=>{
-                return`
-                    <li>${item.username}:${item.password}
-                    <button class="btn" data-id="${item.id}">修改密码</button>    
+     const userlist = document.querySelector('.userlist')
+        const xhr = new XMLHttpRequest()
+        xhr.onload = function(){
+            const data = JSON.parse(xhr.responseText);
+            userlist.innerHTML = data.data.map(item=>{
+                return `
+                    <li>
+                        ${item.username}:${item.password}
+                        <button class="btn" data-id="${item.id}">修改密码</button>
                     </li>
                 `
             }).join('')
-
         }
         xhr.open('get','http://localhost:2108/api/user/list',true)
         xhr.send()
 
-        const xhrshr=new XMLHttpRequest()
-        xhrshr.onload=function(){
-            const data=JSON.parse(xhrshr.responseText);
-            goodslist.innerHTML=data.data.map(item=>{
-                return`
-                <li>
-                  <h4>${item.goods_name}</h4> 
-                  <p>${item.category}</p>
-                  <a>${item.price}</a>   
-                  </li>
-                `
-            }).join('')
-
-        }
-        xhrshr.open('get','http://localhost:2108/api/goods/list',true)
-        xhrshr.send()
-
-
-
-
-        userlist.onclick=(e)=>{
+        userlist.onclick = (e)=>{
             if(e.target.classList.contains('btn')){
-                const {id}=e.target.dataset;
-                const xhr=new XMLHttpRequest()
+                const {id} = e.target.dataset;
+                const xhr = new XMLHttpRequest()
                 xhr.open('put','http://localhost:2108/api/user/'+id,true)
                 // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+                // xhr.send(`password=abc`)
                 xhr.setRequestHeader('Content-Type','application/json')
-                xhr.send(`{"password":"556"}`)
+                xhr.send(`{"password":"123"}`)
             }
         }
-
-
-        // request.get({
-        //     url:'/goods/list',
-        //     data:6,
-        // }).then(({data})=>{
-        //     console.log("data",data);
-        //     goodslist.innerHTML=data.map(item=>{
-        //         return `
-        //             <li>
-        //             <h4>${item.goods_name}</h4> 
-        //             <p>${item.category}</p>
-        //             <a>${item.price}</a>   
-        //             </li>
-        //         `
-        //     }).join('')
-        // })
    </script>
 </body>
 </html>

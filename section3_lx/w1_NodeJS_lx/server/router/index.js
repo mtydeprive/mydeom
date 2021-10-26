@@ -40,3 +40,17 @@ router.use('/user',userRouter);
 router.use('/goods',goodsRouter);
 router.use('/reg',regRouter);
 router.use('/login',loginRouter)
+
+
+//跨域解决方案之jsonp
+//jsonp请求必须响应js代码
+//get  /api/jsonp
+router.get('/jsonp',function(req,res){
+    const {callback}=req.query;
+    const user={
+        name:'wsnd',
+        role:'svip'
+    }
+    // res.send(`getData({"name":"wsnd","role":"svip"})`)
+    res.send(`${callback}(${JSON.stringify(user)})`)
+})
