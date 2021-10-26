@@ -5,11 +5,13 @@ const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
 // 引入gulp-sass并指定sass编译器（sass或node-sass）
 const sass = require('gulp-sass')(require('sass'))
+const browserSync=require('browser-sync')
 
 const filePath = {
     sass:'./src/sass/*.scss',
     js:'./src/js/*.js',
-    html:'./src/views/*.html'
+    html:'./src/**/*.html',
+    css:'./src/**/*.css'
 }
 
 //创建任务：编译sass
@@ -69,5 +71,18 @@ exports.default = function(){
     // 监听sass
     gulp.watch(filePath.sass,compileSass);
 
-    gulp.watch(filePath.js,compileJS)
+    // gulp.watch(filePath.js,compileJS)
+
+
+    //开启一个本地服务器
+    // 监听所有文件修改，实现浏览器自动刷新
+    browserSync({
+        // 监听src目录
+        server:'./src',
+
+        //端口
+
+        //监听文件类型
+        files:[filePath.css,filePath.html]
+    })
 }

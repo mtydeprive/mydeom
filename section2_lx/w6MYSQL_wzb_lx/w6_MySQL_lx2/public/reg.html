@@ -41,9 +41,9 @@
         const password = document.querySelector('#password')
         const btnSubmit = document.querySelector('.btnSubmit')
 
-        const xhr_check = new XMLHttpRequest()
-        xhr_check.onload = function () {
-            const data = JSON.parse(xhr_check.responseText)
+        const xhr = new XMLHttpRequest()
+        xhr.onload = function () {
+            const data = JSON.parse(xhr.response)
             console.log('data', data)
             if (data.code === 200) {
                 // alert('用户名已存在')

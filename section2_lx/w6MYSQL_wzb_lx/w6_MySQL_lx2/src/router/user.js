@@ -1,13 +1,13 @@
 const express = require('express')
 const db = require('../db')
-const {formatData}=require('../utils')
+// const {formatData}=require('./utils')
 
 const router = express.Router();
 module.exports = router;
 
 // get /api/user/list
 router.get('/list',async (req,res)=>{
-    const sql = `select * from users`
+    const sql = `select * from user`
 
     // db(sql,function(data){
     //     res.send(data)

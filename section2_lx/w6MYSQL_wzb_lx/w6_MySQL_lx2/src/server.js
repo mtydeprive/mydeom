@@ -8,6 +8,6 @@ app.use(express.static('../public'))
 // 数据接口
 app.use('/api',router)
 
-app.listen(2108,()=>{
-    console.log('server is running at port 2108')
+app.listen(4000,()=>{
+    console.log('server is running at port 4000')
 })

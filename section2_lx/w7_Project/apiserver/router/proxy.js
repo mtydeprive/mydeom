@@ -7,31 +7,31 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 // 代理服务器
 
 // /proxy/offer
-const offerProxy = createProxyMiddleware({
-    // 目标服务器
-    target: 'https://offer.qfh5.cn', 
-    changeOrigin: true,
-    // 重写路径：过滤掉多余的路径
-    pathRewrite:{
-        '^/proxy/offer':''
-    }
-})
-
-// 前端请求：http://localhost:2108/proxy/offer/api/iq/today
-// 1.替换服务器http://localhost:2108/proxy/offer/api/iq/today->http://offer.qfh5.cn/proxy/offer/api/iq/today
-// 2.重写路径：offer.qfh5.cn/proxy/offer/api/iq/today->http://offer.qfh5.cn/api/iq/today
-//目标请求http://offer.qfh5.cn/api/iq/today
-router.use('/offer',offerProxy) 
-
-
-//代理百度
-// const baiduProxy = createProxyMiddleware({
+// const offerProxy = createProxyMiddleware({
 //     // 目标服务器
-//     target: 'https://baidu.com', 
+//     target: 'https://offer.qfh5.cn', 
 //     changeOrigin: true,
 //     // 重写路径：过滤掉多余的路径
 //     pathRewrite:{
 //         '^/proxy/offer':''
 //     }
 // })
-// router.use('/bd',baiduProxy)
+
+// 前端请求：http://localhost:2108/proxy/offer/api/iq/today
+// 1.替换服务器http://localhost:2108/proxy/offer/api/iq/today->http://offer.qfh5.cn/proxy/offer/api/iq/today
+// 2.重写路径：offer.qfh5.cn/proxy/offer/api/iq/today->http://offer.qfh5.cn/api/iq/today
+//目标请求http://offer.qfh5.cn/api/iq/today
+// router.use('/offer',offerProxy) 
+
+
+//代理百度
+const baiduProxy = createProxyMiddleware({
+    // 目标服务器
+    target: 'https://shop.vivo.com.cn', 
+    changeOrigin: true,
+    // 重写路径：过滤掉多余的路径
+    pathRewrite:{
+        '^/proxy/shop':''
+    }
+})
+router.use('/shop',baiduProxy)

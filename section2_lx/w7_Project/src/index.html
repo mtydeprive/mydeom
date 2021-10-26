@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>LINE FRIENDS</title>
     <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.css">
 </head>
 <body>
@@ -28,13 +28,13 @@
 
     //利用服务器代理，实现跨域请求
     //  请求自己的服务器，在自己的服务器向目标服务器发起请求（后端没有同源策略限制）
-    $.get('http://localhost:2108/proxy/offer/api/iq?sort=hot&total=false',function(res){
-        console.log('代理服务器数据',res);
-    })
-    $.get('http://localhost:2108/proxy/offer/api/iq?sort=difficulty&total=false',function(res){
-        console.log('代理服务器数据',res);
-    })
-    $.get('http://localhost:2108/proxy/offer/api/iq?sort=addtime&total=false',function(res){
+    // $.get('http://localhost:2108/proxy/offer/api/iq?sort=hot&total=false',function(res){
+    //     console.log('代理服务器数据',res);
+    // })
+    // $.get('http://localhost:2108/proxy/offer/api/iq?sort=difficulty&total=false',function(res){
+    //     console.log('代理服务器数据',res);
+    // })
+    $.get('http://localhost:2108/proxy/shop/wap/fbApi/v1/channel/getDetail',function(res){
         console.log('代理服务器数据',res);
     })
    </script>
