@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <style>
+        .price del::before,.price span::before{
+    content:'￥'
+}
+    </style>
+</head>
+<body>
+    <div class="goodslist container-fluid">
+     <ul class="row align-items-start list-inline">
+         <% data.forEach(item=>{%>
+         <li data-id="<%=item.goods_id%>" class="col-sm-6 col-md-4 col-lg-3 col-xl-2 p-2 list-inline-item.">
+             <img src="<%=item.img_url%>" class="img-fluid">
+             <h4 class="h6 text-secondary"><%=item.goods_name%></h4>
+             <p class="price text-danger">
+                 <del class="fst-italic"><%=item.price%></del>
+                 <span class="fs-3"><%=item.sales_price%></span>
+             </p>
+         </li>
+         <%})%>
+     </ul>
+    </div>
+    <script>
+        const goodslist=document.querySelector('.goodslist')
+
+        goodslist.onclick=function(e){
+            console.log(666);
+            if(['IMG','H4'].includes(e.target.tagName)){
+                const {id}=e.target.parentNode.dataset
+                location.href="/render/goods/"+id
+            }
+        }
+    </script>
+</body>
+</html>

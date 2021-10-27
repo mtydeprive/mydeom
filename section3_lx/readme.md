@@ -120,3 +120,69 @@
     * 服务器代理
         > http-proxy-middleware
     * 爬
+
+* 页面渲染方式
+    * 客户端渲染Browser Side Rendering(BSR)
+        >利用ajax请求数据，然后在客户端生成html结构的渲染方式
+        * 前后端分离
+        * 优点
+            * 用户体验
+            * 局部刷新
+        * 缺点
+            * SEO不友好
+        * 请求步骤
+            1. 请求空的html
+            2. 请求js代码
+            3. 发起ajax请求
+            4. 渲染页面
+    * 服务器渲染Server Side Rendering(SSR)
+        > 在服务器生成html结构，然后返回给前端渲染
+        * 优点
+            * 有利于SEO
+            * 速度快
+        * 请求步骤
+            1. 请求服务器，得到一个完整的html结构
+            2. 渲染页面
+    > 实际开发中的方案：首页采用SSR，其他页面采用BSR
+
+    * 在NodeJS中如何实现
+        * 客户端渲染
+        * 服务端渲染
+            * 模板引擎
+                * ejs
+                * jade/pug
+
+### 练习
+* 配合bootstrap完成goodslist与goods页面（SSR）
+* 完成登录、注册（SSR）
+
+## day1-3
+
+### 复习
+* 跨域解决方案
+    * JSONP
+    * CORS
+    * 服务器代理
+        * 正向代理
+            >代理服务器为客户端服务
+        * 反向代理
+            >代理服务器为服务器服务，反向代理用户一般无法感知代理服务器的存在
+            * 负载均衡
+* BSR与SSR
+* 模板引擎
+    * ejs
+    * jade/pug
+
+### 知识点
+* 文件上传
+    * 前端：发送
+        > multipart/form-data
+        * `<form enctype="multipart/form-data">`
+        * FormData
+            * set(name,value)
+            * append(name,value)
+            * delete(name)
+            * get(name)
+            * getAll(name)
+    * 后端：接收
+        > 使用multer模块格式化`multipart/form-data`类型数据，把文件数据格式化到`req.file`或`req.files`

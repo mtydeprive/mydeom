@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面渲染方式之客户端渲染</title>
+</head>
+<body>
+    <h1>页面渲染方式之客户端渲染</h1>
+    <div class="box">
+
+    </div>
+    <script>
+        const box= document.querySelector('.box')
+
+        const xhr=new XMLHttpRequest()
+        xhr.onload=function(){
+            const data=JSON.parse(xhr.responseText)
+            box.innerHTML=data.data.map(item=>{
+                return`<div>
+                    <h4>${item.goods_name}</h4>
+                    <p>${item.price}</p>
+                    </div>`
+            }).join('')
+        }
+        xhr.open('get','http://localhost:2108/api/goods/list',true)
+        xhr.send()
+    </script>
+</body>
+</html>
