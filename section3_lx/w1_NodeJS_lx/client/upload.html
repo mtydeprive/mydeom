@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传</title>
+</head>
+<body>
+    <h4>文件上传</h4>
+    <h4>表单上传</h4>
+    <form action="http://localhost:2108/api/upload/avatar" method="post" enctype="multipart/form-data">
+        <p><input type="file" name="avatar"/></p>
+        <button>上传</button>
+    </form>
+    <form action="http://localhost:2108/api/upload/goods" method="post" enctype="multipart/form-data">
+        <p><input type="file" name="goods" multiple></p>
+        <button>上传</button>
+    </form>
+
+
+    <h4>ajax上传</h4>
+    <div class="ajax">
+        <p><input type="file" name="avatar"/></p>
+        <button class="btnAvatar">上传</button>
+    </div>
+    <div class="ajax">
+        <p><input type="file" name="goods" multiple/></p>
+        <button class="btnGoods">上传</button>
+    </div>
+    <script>
+        /**
+         * formData
+            *实例化：const fdata=new FormData()  
+            *原型方法
+                *set(key,value)
+                * append(key,value)
+        */
+        const avatar=document.querySelector('.ajax [name=avatar]')
+        const btnAvatar=document.querySelector('.btnAvatar')
+       
+        const goods=document.querySelector('.ajax [name=goods]')
+        const btnGoods=document.querySelector('.btnGoods')
+       
+        btnAvatar.onclick=function(){
+
+            const fdata=new FormData();
+            // 给formdata写入数据(文件信息或文本信息)
+            fdata.set('avatar',avatar.files[0])
+            fdata.set('username','laoxie')
+
+            const xhr=new XMLHttpRequest()
+    
+            xhr.open('post','http://loaclhost:2108/api/upload/avatar',true)
+            xhr.send(fdata)
+        }
+        btnGoods.onclick=function(){
+            const fdata=new FormData();
+            // 给formdata写入数据(文件信息或文本信息)
+            for (let i = 0; i < goods.files.length; i++) {
+                fdata.append('goods',goods.files[i])
+            }
+
+            fdata.set('username','laoxie')
+            // fdata.get('goods')
+            // fdata.getAll('goods')
+            // fdata.keys(); //['goods','username','userid']
+            const xhr = new XMLHttpRequest()
+            xhr.open('post','http://localhost:2108/api/upload/goods',true)
+            xhr.send(fdata)
+        }
+
+    </script>
+</body>
+</html>

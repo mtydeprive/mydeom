@@ -7,7 +7,7 @@ const userRouter=require('./user')
 const goodsRouter=require('./goods')
 const regRouter=require('./reg')
 const loginRouter=require('./login')
-
+const uploadRouter=require('./upload')
 
 //跨域解决方案：CORS
 //设置响应头：Access-Control-Allow-Origin
@@ -40,7 +40,7 @@ router.use('/user',userRouter);
 router.use('/goods',goodsRouter);
 router.use('/reg',regRouter);
 router.use('/login',loginRouter)
-
+router.use('/upload',uploadRouter)
 
 //跨域解决方案之jsonp
 //jsonp请求必须响应js代码

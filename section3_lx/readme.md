@@ -186,3 +186,45 @@
             * getAll(name)
     * 后端：接收
         > 使用multer模块格式化`multipart/form-data`类型数据，把文件数据格式化到`req.file`或`req.files`
+
+* try...catch
+    > 使用try...catch可以避免当代码出现错误时影响后续代码继续执行
+    ```js
+        try{
+            //尝试执行这里的代码
+        }catch{
+            //如果以上代码有错误或promise对象的状态为Rejected则执行这里的代码
+        }
+    ```
+
+* 加密
+    * 单向加密
+        > 加密后不可解密
+        * 加密算法
+            * md5
+            * sha1
+            * sha256
+            * sha512
+            * ...
+        * 缺点
+            * 不能反向解密但可以暴力破解
+                > 解决方案：
+                * 加盐
+                * 多次加密
+    * 双向加密
+        > 密钥
+        * 对称加密
+            > 加密和解密共用一个密钥
+        * 非对称加密
+            > 公钥+私钥
+    * crypto
+    * 应用
+        * https: ssl
+
+        ```
+            //明文传输
+            http://localhost:2108/index.html
+
+            //密文传输
+            https://qq.com
+        ```

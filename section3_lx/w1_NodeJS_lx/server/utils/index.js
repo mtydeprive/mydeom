@@ -1,6 +1,6 @@
 //封装formatData函数， 用以生产返回前端的数据格式
 function formatData(obj={}){
-    const {code=200,data=[],msg='success'}=obj
+    let {code=200,data=[],msg='success'}=obj
     if(code===400&&msg==='success'){
         msg='fail'
     }
