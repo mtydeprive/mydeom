@@ -394,3 +394,13 @@
 
 ### 练习 
 * 完成create,remove,update的封装
+
+
+## day1-5
+* 通过getElementsByTagName()获取到的元素如何使用forEach循环
+    * HTMLCollection  
+    * NodeList
+### 面试题
+```js
+    const btns=document.getElementsByTagName('button')//10个button
+```

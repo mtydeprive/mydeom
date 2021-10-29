@@ -10,9 +10,8 @@ router.get('/list',async function(req,res){
    console.log("data=",data);
     res.send(formatData.success(data))
 })
-router.delete('/zengjia',async function(req,res){
-const data = await connect.delete('user',{username:'nmnm'})
-   console.log("data=",data);
+router.post('/zengjia',async function(req,res){
+const data = await connect.create('user',[{username:'nmnm'},{username:'ljo'}])
     res.send(formatData.success(data))
 })
 // router.delete('/zengjia',async function(req,res){
@@ -83,18 +82,18 @@ const data = await connect.delete('user',{username:'nmnm'})
 //     }
 // }
 
-async function connect(){
-    try{
-    const client=await MongoClient.connect(url)
-    const db=client.db(dbname);
+// async function connect(){
+//     try{
+//     const client=await MongoClient.connect(url)
+//     const db=client.db(dbname);
 
-    const col=db.collection('user')
-    const data=col.updateMany({role:'svip'},{$set:{age:'23'}})
+//     const col=db.collection('user')
+//     const data=col.updateMany({role:'svip'},{$set:{age:'23'}})
 
-    console.log("data=",data); 
-    }catch(err){
+//     console.log("data=",data); 
+//     }catch(err){
 
-    }
+//     }
 
-}
-connect()
+// }
+// connect()
