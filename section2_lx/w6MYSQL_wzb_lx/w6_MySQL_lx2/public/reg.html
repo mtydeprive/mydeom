@@ -55,8 +55,8 @@
         }
 
         username.onchange = function () {
-            xhr_check.open('get', 'http://localhost:2108/api/reg/check?username=' + username.value, true)
-            xhr_check.send()
+            xhr.open('get', 'http://localhost:2108/api/reg/check?username=' + username.value, true)
+            xhr.send()
         }
 
 

@@ -228,3 +228,169 @@
             //密文传输
             https://qq.com
         ```
+
+## day1-4
+
+### 复习
+* 文件上传
+    * 前端代码
+        * `multipart/form-data`
+        * FormData
+            * set()
+            * append()
+        * base64
+            > 把图片转成base64编码后再传到服务器
+        ```html
+            <!-- 表单 -->
+            <form action method enctype>
+                <input type="file" id="upload" multiple />
+            </form>
+
+            <!-- ajax -->
+            const fdata=new FormData()
+            xhr.send(fdata)
+        ```
+    * 后端代码
+        > 安装：npm i multer
+        ```js
+            const multer=require('multer')
+            const upload=multer({dest or storage,fileFilter,limits})
+        ```
+
+* 加密解密
+    * base64编码(65个合法字符：[a-zA-Z0-9/+=])
+    * 单向加密
+    * 双向加密
+        * 对称加密
+        * 非对称加密（公钥+私钥）
+    * NodeJS
+        * crypto
+        ```js
+            //password->password2
+            123456->xxxxx
+
+            // 加盐
+            123456->密钥->密文
+            123456->adc->密文
+        ```
+
+### 知识点
+* 数据库：Database
+    * 关系型数据库
+        * 概念
+            * 表：table
+            * 记录：row
+        * 常用关系型数据库
+            * Oracle
+            * MySQL/MariaDB
+            * SQL Server
+            * PostgrcSQL
+            * DB2
+    * 非关系型数据库
+        * MongoDB
+            * 集合：collection
+            * 文档：document
+        
+* MongoDB
+    ```js
+        //user集合
+        [
+            {username:'sada',age:21,hobby:'足疗'}
+            {username:'vnk',age:21,password:12345,tag:['手打师','xxx']}
+            {username:'yui'}
+        ]
+    ```
+    * 命令行操作
+        * 操作数据库
+        * 操作集合
+        * 操作文档：CRUD
+            * 增：
+                * insertOne(document)
+                * insertMany([document...])
+            * 删:
+                * deleteOne(query)
+                * deleteMany(query)
+            * 改：
+                * updateOne(query,newData)
+                * updateMany(query,newData)
+                * save(document)
+                ```js
+                    db.user.updataOne(
+                        //条件
+                        {id:ObjectId('fghjk5612121')},
+                        {
+                            // 把username改成jingjing
+                            $set:{username:'jingjing'},
+                            // 把qty在原来的基础上+1
+                            $inc:{qty:1},
+                            //给hobby数组添加'唱歌'
+                            $push:{hobby:'唱歌'},
+                            //给hobby数组添加"唱歌"并自动去重
+                            $addToSet:{hobby:'唱歌'}
+                        }
+                    )
+                ```
+            * 查：
+                * find(query,project)
+                * findOne(query,project)
+            * 可视化工具
+                * compass
+                * 导入与导出
+                * 查询条件
+                    >删、改/查出需要使用条件
+                    ```js
+                        //mysql 写法
+                        // select * from user where id=1
+                        //mongoDB 写法
+                        db.user.find({id:1})
+                        //select * from user where id=1 or name=laoxie
+                        db.user.find({$or:[{id:1},{name:'laoxie'}]})
+                        // select * from user where age>18
+                        db.user.find({age:{$gt:18}})
+
+                        //批量
+                        //delete from user where id in(2,4,6,8)
+                        //delete from user where id in(select userid from cart where qty>0)
+                        db.user.deleteMany({id:{$in:[2,4,6,8]}})
+
+                        //正则表达式
+                        db.user.deleteMany({username:/laoxie/i})
+
+                        //过滤与条件限制
+                        //select * from goods limit 0,10
+                        db.goods.find({}).skip(0).limit(10)
+                        //select * from goods order by price desc limit 0,10
+                        db.goods.find().sort({price:-1}).skip(0).limit(10)
+                    ```
+    * 在NodeJS中使用MongoDB
+        * 驱动
+            * mongodb（官方）
+            * mogoose
+                > 基于mongodb驱动的封装
+        * mongodb驱动
+            ```js
+                //连接数据库
+                const url='mongodb://127.0.0.1:27017'
+                mongodb.MongoClient.connect(url,callback)
+            ```
+        * 封装mongodb操作
+            * create()
+            * remove()
+            * update()
+            * find()  
+
+
+* Set集合
+    ```js
+        const myset = new Set(); // 与数组类似，能自动去重
+        myset.add(10); // [10]
+        myset.add(20)   // [10,20]
+        myset.add(30) ; // [10,20,30]
+        myset.add(10) ; // [10,20,30]
+        myset.add('10') ; // [10,20,30,'10']
+        myset.add({a:1,b:2}) ; // [10,20,30,'10',{a:1,b:2}]
+        myset.add({a:1,b:2}) ; // [10,20,30,'10',{a:1,b:2},{a:1,b:2}]
+    ```
+
+### 练习 
+* 完成create,remove,update的封装

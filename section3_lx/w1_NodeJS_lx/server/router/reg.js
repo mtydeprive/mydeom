@@ -14,7 +14,7 @@ router.post('/',async(req,res)=>{
 
     //加密
     //1.以md5加密算法创建一个hash加密对象
-    const hash=crypto.createHash('sha256')
+    const hash=crypto.createHash('sha256');//加盐：crypto.createHmac('sha256','abc')
     //2.update()加密数据
     hash.update(password)
     //3.输出密文 (hex,base64,buffer)
