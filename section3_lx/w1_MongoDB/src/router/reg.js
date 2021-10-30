@@ -9,7 +9,7 @@ const {formatData}  = require('../utils')
 
 // post /api/reg
 router.post('/',async (req,res)=>{
-    const {username,password} = req.body;
+    const {username,password,role,age} = req.body;
 
     // 加密
     // 1.以md5加密算法创建一个hash对象
@@ -19,9 +19,13 @@ router.post('/',async (req,res)=>{
     // 3.输出密文（hex,base64,Buffer）
     const password2 = hash.digest('hex')
 
-    console.log('password',password,password2)
-
-    
+    const result=await db.create('user',{username,password2})
+    res.send(
+        result?
+        formatData.success()
+        :
+        formatData.fail()
+    )
 })
 
 // get /api/reg/check

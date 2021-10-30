@@ -19,5 +19,11 @@ router.get('/',async (req,res)=>{
     // 3.输出密文（hex,base64,Buffer）
     const password2 = hash.digest('hex')
 
-    
+    const result=await db.find('user',{username,password2})
+
+    if(result.length>0){
+        res.send(formatData.success(result[0]))
+    }else{
+        res.send(formatData.fail())
+    }
 })

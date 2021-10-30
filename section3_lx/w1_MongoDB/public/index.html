@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <h1>首页</h1>
+    <img src="./img/00f6b4c0b44e408092f3363915902fe4.jpg" alt="">
+    <div class="userlist">
+
+    </div>
+    <script>
+     const userlist = document.querySelector('.userlist')
+        const xhr = new XMLHttpRequest()
+        xhr.onload = function(){
+            const data = JSON.parse(xhr.responseText);
+            userlist.innerHTML = data.data.map(item=>{
+                return `
+                    <li>
+                        ${item.username}:${item.password||item.password2}
+                        <button class="btn" data-id="${item.id}">修改密码</button>
+                    </li>
+                `
+            }).join('')
+        }
+        xhr.open('get','http://localhost:2108/api/user/list',true)
+        xhr.send()
+
+        userlist.onclick = (e)=>{
+            if(e.target.classList.contains('btn')){
+                const {id} = e.target.dataset;
+                const xhr = new XMLHttpRequest()
+                xhr.open('put','http://localhost:2108/api/user/'+id,true)
+                // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+                // xhr.send(`password=abc`)
+                xhr.setRequestHeader('Content-Type','application/json')
+                xhr.send(`{"password":"123"}`)
+            }
+        }
+   </script>
+</body>
+</html>
