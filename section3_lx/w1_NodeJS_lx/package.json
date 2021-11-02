@@ -2,7 +2,7 @@
   "name": "section3_lx",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/index.js",
   "directories": {
     "doc": "doc"
   },
@@ -15,6 +15,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "multer": "^1.4.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "ws": "^8.2.3"
   }
 }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于Websocket的多人聊天室</title>
+</head>
+<style>
+     ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .msg-list {
+            position: relative;
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .msg-list ul {
+            padding: 10px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        .msg-list li {
+            float: left;
+            clear: both;
+            margin: 10px 0;
+            padding: 5px;
+            line-height: 2;
+            border-radius: 5px;
+            background-color: #efefef;
+        }
+        .msg-list li.login,.msg-list li.logout{
+            float:none;
+            text-align: center;
+            font-size:12px;
+            color:#999;
+            background-color: transparent;
+        }
+
+        .msg-list li.active {
+            float: right;
+            background-color: #58bc58;
+            color: #fff;
+        }
+
+        .msg-list textarea {
+            display: block;
+            min-height: 50px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .status {
+            display: none;
+            position: absolute;
+            left: 50px;
+            bottom: 0;
+            right: 0;
+            padding: 5px 10px;
+            text-align: center;
+            color: #999;
+        }
+
+        .login {
+            text-align: right;
+        }
+</style>
+
+<body>
+    <h1>基于Websocket的多人聊天室 </h1>
+    <div id="autoAnswer" class="msg-list">
+        <div class="login">
+            <input type="text" name="username" id="username">
+            <button class="btn-login">进入</button>
+            <button class="btn-logout">退出</button>
+        </div>
+        <ul>
+        </ul>
+        <textarea></textarea>
+        <button class="btn-send">提交</button>
+        <div class="status"></div>
+    </div>
+    <script>
+        /**
+         * Websocket
+            * 消息类型
+                * 格式：{type,username,msg,time}
+                    * type: login,logout,message
+                * 提示消息
+                    * 提示用户进入聊天室
+                    * 提示用户离开聊天室
+                * 用户消息
+                    * 用户发送的消息
+         */
+         const autoAnswer = document.querySelector('#autoAnswer');
+        const login = autoAnswer.querySelector('.login');
+        const username = login.children[0];
+        const btnLogin = login.children[1];
+        const btnLogout = login.children[2];
+
+        const msglist = autoAnswer.querySelector('ul');
+        const msg = autoAnswer.querySelector('textarea');
+        const btnSend = autoAnswer.querySelector('.btn-send');
+        const status = autoAnswer.querySelector('.status');
+
+        let socket
+        let url=`ws://localhost:2108`  //`ws://localhost:1001`
+        btnLogin.onclick=function(){
+            //连接websocket服务器
+
+            //连接socket服务器 (实例化websocket对象)
+             socket = new WebSocket(url);
+
+             //监听服务器发送消息
+             socket.onmessage = function(e){
+                 const data=JSON.parse(e.data)
+                console.log('message=',e.data,data)
+                let li=document.createElement('li')
+                li.className=data.type;
+                let time=new Date(data.time)
+                if(data.type==='login'){
+                    li.innerHTML=`${data.username}进入聊天室（${time.toLocaleDateString()}${time.toLocaleTimeString()}）`
+                }else if(data.type==='logout'){
+                    li.innerHTML=`${data.username}退出聊天室（${time.toLocaleDateString()}${time.toLocaleTimeString()}）`
+                }else if(data.type==='message'){
+                    if(data.username===username.value){
+                        li.className='active'
+                    }
+                    li.innerHTML=`${data.username}:${data.msg}`
+                }
+                msglist.appendChild(li)
+
+                //把最后添加的li滚动到可视区域
+                li.scrollIntoView();
+             }
+
+             //监听连接服务器成功后执行open事件
+             socket.onopen=function(){
+                 const data={
+                     type:'login',
+                     username:username.value,
+                     msg:'',
+                     time:Date.now()
+                }
+                 socket.send(JSON.stringify(data))
+
+                //连接成功后：禁用用户名输入，连接按钮
+                username.disabled=true;
+                btnLogin.disabled=true;
+             }
+             //监听离开：当用户离开后自动执行close事件
+             socket.onclose=function(){
+                console.log('close');
+                username.disabled=false;
+                btnLogin.disabled=false;
+             }
+        }
+        
+        //给服务器发送消息：send()
+        btnSend.onclick = function(){
+            let data={
+                type:'message',
+                username:username.value,
+                msg:msg.value,
+                time:Date.now()
+            }
+            socket.send(JSON.stringify(data))
+
+                //清空并自动获得焦点
+                msg.value=''
+                 msg.focus();
+        }
+
+        //退出
+        btnLogout.onclick=function(){
+            //如果需要通过消息去广播给其他用户退出状态，必须在断开前发送消息
+            let data={
+                type:'logout',
+                username:username.value,
+                msg:'',
+                time:Date.now()
+            }
+            socket.send(JSON.stringify(data))
+            socket.close();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,3 +1,157 @@
+## 行内式JS
+* js代码可以插入标签内
+    ```js
+        <div onclick="alert('hello world! wo shi ni baba')">别点我，没惊喜</div>
+        <a href="javascript:alert('JavaScript 真好玩 有趣')">发现js的世界</a>
+    ```
+
+## 内嵌式JS
+* 在文件头部插入一段js脚本,在body之前运行,运行完成后body才开始执行。
+* 在body尾部插入一段js脚本,body运行结束后才运行这段js代码。
+
+## 外链式
+* 在html中引入一段外部js`<script src="./xxx.js"></script>`
+
+### 数据类型
+* 基本数据类型
+    * String 字符串
+    * Number 数值型
+    * boolean 布尔型
+    * null 
+    * undefined
+* 引用数据类型
+    * 有基本数据类型组合而成
+        >定义一个对象，对象内部有很多属性、键值对
+        ```js
+            let mrSkr = {name: "Mr Skr",money: 123.45,age: 38,inJail: true}
+        ```
+    * 数字转字符串String()->`let num=123; let obj=String(num)`
+
+### if
+    ```js
+        // 单分支
+        if（条件成立）{
+            执行代码
+        }
+
+        //if双分支
+        if（条件a成立）{
+            走a路
+        }else{
+            走b路
+        }
+
+        //if多分支
+        if（条件a成立）{
+            走a路
+        }else if（条件b成立）{
+            走b路
+        }else if（条件c成立）{
+            走c路
+        }else{
+            走d路
+        }
+    ```
+## switch
+    ```js
+        switch （某个值）{
+            case 取值A:
+            走A路
+            break;
+            case 取值B:
+            走B路
+            break;
+            case 取值C:
+            走C路
+            break;
+            default:
+            走默认路
+            break;
+        }
+    ```
+### 循环
+* while循环
+    ```js
+        while(条件成立){
+            执行循环体
+        }
+    ```
+* for循环
+    ```js
+        let num=0;
+        for(let i=0;i<=n;i++){
+            num+=i
+        }
+    ```
+
+### 函数 function
+* 声明式函数
+    * 声明前后都能调用
+    ```js
+        function add1(a,b){
+            var sum=a+b
+            //返回结果给调用者
+            return sum
+       }
+       //调用
+       add1()
+    ```
+* 赋值式函数
+    * 只能在赋值后使用
+    ```js
+        var add2=function (a,b){
+           var sum=a+b
+            //返回结果给调用者
+           return sum
+       }
+    ```
+
+## 作用域
+* 作用域，就是当访问一个变量时，编译器在执行这段代码时，会首先从当前的作用域中查找是否有这个标识符，如果没有找到，就会去父作用域查找，如果父作用域还没有找到则继续向上查找，直到全局作用域为止。可理解为该上下文中声明的变量和声明的作用范围，可分为全局域和局部作用域。
+    * 全局作用域
+        > 全局都能访问
+    * 局部作用域
+        > 只有局部地方能够使用（例如函数内的变量只有函数内能够使用）
+
+
+## 传递
+* 值传递
+    > 传参为基本数据类型（传递的是值拷贝）并不会改变原数据类型的值。
+* 引用传递
+    > 传参为引用数据类型（传递的是对象的地址）不同变量引用相同的地址时，修改任意一方会影响另一方的值
+
+## 数组
+* 操作
+    * push() 将一个或多个元素添加到数组末尾，并返回该数组的新长度。
+    * pop()  从数组中删除最后一个元素，并返回该元素的值。此方法更改数组的长度。
+    * unshift()  方法将一个或多个元素添加到数组的开头，并返回该数组的新长度(该方法修改原有数组)。
+    * shift()   从数组中删除第一个元素，并返回该元素的值
+    * splice()   通过删除或替换现有元素或者原地添加新的元素来修改数组,并以数组形式返回被修改的内容。此方法会改变原数组。start【指定修改的开始位置（从0计数）】   deleteCount【整数，表示要移除的数组元素的个数。】    item【要添加进数组的元素】
+    * reverse()  颠倒并返回数组
+    * indexOf()  返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1
+    * concat()  合并两个或多个数组。此方法不会更改现有数组，而是返回一个新数组。
+    * join()  将一个数组的所有元素连接成一个字符串并返回这个字符串。如果数组只有一个项目，那么将返回该项目而不使用分隔符。
+    * sort()    对数组的元素进行排序，并返回数组。默认排序顺序是在将元素转换为字符串
+    * ForEach()  对数组进行遍历
+    * map()      对数组进行遍历并返回一个新数组，其结果组中的每个元素是调用一次提供的函数后值
+    * filter() （过滤）方法创建一个新数组, 其包含通过所提供函数实现的测试的所有元素。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 三阶段
 
 ## day1-1：NodeJS
@@ -581,73 +735,3 @@
                     // 用户-》服务器
                 ```
             * websocket
-
-## day-2
-
-### 知识点
-* 实时通讯
-    * 轮询
-    * 长轮询
-    * websocket
-* websocket 
-    * 服务端
-        > ws模块/socket.io
-        * 使用步骤
-            1. 安装引用
-                ```
-                    npm install ws
-                ```
-            2. 创建websocket服务器
-                 ```js
-                     let socketServer=require('ws').Server;
-                     let wsSever=new socketServer(  {port:1001});
-                 ```
-            3. 监听客户端
-                ```js
-                    //监听连接
-                    wsServer.on('connection',(client)=>{
-                        //监听消息发送
-                        client.on('message',(msg)=>{
-
-                        })
-                        client.on('close',()=>{
-
-                        })
-                    })
-                ```
-            4. 给客户端发送消息
-                > wsServer.clients
-                ```js
-                    client.send()
-                ```
-    * 客户端
-        > websocket
-        * 特点:
-            * 双向
-            * 长连接
-            * 没有跨域限制
-        * 事件
-            * message
-            * open
-            * close
-            * error
-        * 方法
-            * send()
-            * close()
-        * 使用步骤
-            1. 连接websocket服务器（实例化websocket对象）
-                ```js
-                    const socket=new WebSocket(`ws://localhost:1001`);
-                ```
-            2. 监听服务器消息
-                ```js
-                    socket.onmessage=function(e){
-                        //e.data
-                    }
-                ```
-            3. 给服务器发送消息
-                > 只能发送字符串与二进制数据类型
-                    ```js
-                        socket.send()
-                    ```
-* node.scollIntoView()  把node节点滚动到可视区域
