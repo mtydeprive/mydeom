@@ -17,7 +17,7 @@ router.get('/list',async(req,res)=>{
     const skip=(page-1)*size
     const limit=size*1;
 
-    const data=await db.find('goods',{},{skip,limit,sort,projection:{price:1,goods_name:1}})
+    const data=await db.find('goods',{},{skip,limit,sort})
     res.send(
         formatData.success(data)
     )

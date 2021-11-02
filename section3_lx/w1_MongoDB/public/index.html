@@ -29,6 +29,19 @@
         }
         xhr.open('get','http://localhost:2108/api/user/list',true)
         xhr.send()
+        // const xhr = new XMLHttpRequest()
+        // xhr.onload = function(){
+        //     const data = JSON.parse(xhr.responseText);
+        //     userlist.innerHTML = data.data.map(item=>{
+        //         return `
+        //             <li>
+        //                <img src="${item.img_url}">
+        //             </li>
+        //         `
+        //     }).join('')
+        // }
+        // xhr.open('get','http://localhost:2108/api/goods/list',true)
+        // xhr.send()
 
         userlist.onclick = (e)=>{
             if(e.target.classList.contains('btn')){
