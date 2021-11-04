@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05tab标签切换</title>
+  <link rel="stylesheet" href="./css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>05tab标签切换</h1>
+    <div id="app">
+      <ul class="nav nav-tabs">
+        <!-- <li class="nav-item" v-for="(item,idx) in {a:10,b:20}">
+              <a class="nav-link" aria-current="page" href="#">{{idx}}-{{item}}</a>
+            </li> -->
+        <!-- <li class="nav-item" v-for="(item,key,idx) in [10,20,30]">
+              <a class="nav-link" aria-current="page" href="#">{{idx}}-{{key}}-{{item}}</a>
+            </li> -->
+        <!-- <li class="nav-item" v-for="(item,idx) in '字符串'">
+              <a class="nav-link" aria-current="page" href="#">{{idx}}-{{item}}</a>
+            </li> -->
+
+          <!-- 如果ind===index 添加active-->
+        <!-- <li class="nav-item" v-for="(item,idx) in tabs" v-on:click="index=idx">
+          <a v-bind:class="'nav-link' + ' '+(idx===index?'active':'')" href="#">{{idx}}-{{item}}</a>
+        </li> -->
+        
+        <!-- <li class="nav-item" v-for="(item,idx) in tabs" v-on:click="index=idx">
+          <a v-bind:class="['nav-link',idx===index?'active':'']" href="#">{{item.name}}</a>
+        </li> -->
+        <!-- <li class="nav-item" v-for="(item,idx) in tabs" v-on:click="index=idx">
+          <a v-bind:class="{'nav-link':true,active:idx===index}" href="#">{{item.name}}</a>
+        </li> -->
+        <li class="nav-item" v-for="(item,idx) in tabs" v-on:click="index=idx">
+          <!-- <a v-bind:class="['nav-link',{active:idx===index}]" href="#">{{item.name}}</a> -->
+          <a class="nav-link" v-bind:class="{active:idx===index}" href="#">{{item.name}}</a>
+        </li>
+      </ul>
+      <div v-for="(item,idx) in tabs" class="p-3" v-show="idx===index">
+      <!-- <div v-for="(item,idx) in tabs" class="p-3" v-if="idx===index"> -->
+        {{item.name}}喜欢{{item.hobby}}
+      </div>
+    </div>
+  </div>
+
+
+  <script src="./js/vue.js"></script>
+  <script>
+    /**
+     * tab标签切换
+     */
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        index: 0,
+        // tabs: ['吴彦祖', '陈冠希', '金城武', 'laoxie']
+        tabs:[
+          {
+          name:'吴彦祖',
+          hobby:'拍电影'
+        },
+          {
+          name:'陈冠希',
+          hobby:'借钱'
+        },
+          {
+          name:'金城武',
+          hobby:'武术'
+        },
+          {
+          name:'laoxie',
+          hobby:'搬砖'
+        },
+        
+      ]
+      }
+    })
+    console.log('vm', vm);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04Vue中如何设置响应式属性</title>
+</head>
+
+<body>
+    <h1>04Vue中如何设置响应式属性</h1>
+    <div id="app">
+       <p>用户名：{{username}}</p> 
+        <p>年龄：{{age}}</p>
+        <p>成绩：{{score}}</p>
+        <p>爱好：{{hobby}}</p>
+    </div>
+    
+    <script src="./js/vue.js"></script>
+    <script>
+
+        /**
+         *   04Vue中如何设置响应式属性  
+                * 初始化时设置data
+                * Vue.set()
+        */
+       const vm=new Vue({
+           el:'#app',
+           data:{
+               username:'laoxie',
+               age:18,
+               score:{
+                   chinese:100,
+                   Math:100,
+                   english:11
+               },
+               hobby:['写代码','搬砖','工具人']
+           }
+       })
+       
+    </script>
+</body>
+
+</html>

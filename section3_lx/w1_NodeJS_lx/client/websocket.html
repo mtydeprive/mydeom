@@ -8,6 +8,15 @@
     <title>基于Websocket的多人聊天室</title>
 </head>
 <style>
+    body,html{
+        width: 100%;
+        height: 100%;
+    }
+    .app{
+        width: 800px;
+        position: relative;
+        margin: 0 auto;
+    }
      ul {
             list-style: none;
             padding: 0;
@@ -17,7 +26,7 @@
         .msg-list {
             position: relative;
             width: 600px;
-            margin: 0 auto;
+            /* margin: 0 auto; */
         }
 
         .msg-list ul {
@@ -73,22 +82,38 @@
         .login {
             text-align: right;
         }
+        .box{
+            width: 100px;
+            border: 1px solid red;
+            position: absolute;
+            top: 20px;
+            right: 50px;
+        }
+        p{
+            margin: 0;
+        }
 </style>
 
 <body>
     <h1>基于Websocket的多人聊天室 </h1>
-    <div id="autoAnswer" class="msg-list">
-        <div class="login">
-            <input type="text" name="username" id="username">
-            <button class="btn-login">进入</button>
-            <button class="btn-logout">退出</button>
+    <div class="app">
+        <div id="autoAnswer" class="msg-list">
+            <div class="login">
+                <input type="text" name="username" id="username">
+                <button class="btn-login">进入</button>
+                <button class="btn-logout">退出</button>
+            </div>
+            <ul>
+            </ul>
+            <textarea></textarea>
+            <button class="btn-send">提交</button>
+            <div class="status"></div>
         </div>
-        <ul>
-        </ul>
-        <textarea></textarea>
-        <button class="btn-send">提交</button>
-        <div class="status"></div>
+        <div class="box">
+      
+        </div>
     </div>
+
     <script>
         /**
          * Websocket
@@ -111,13 +136,14 @@
         const msg = autoAnswer.querySelector('textarea');
         const btnSend = autoAnswer.querySelector('.btn-send');
         const status = autoAnswer.querySelector('.status');
+        const box=document.querySelector('.box')
 
         let socket
         let url=`ws://localhost:2108`  //`ws://localhost:1001`
         btnLogin.onclick=function(){
             //连接websocket服务器
-
-            //连接socket服务器 (实例化websocket对象)
+  
+                //连接socket服务器 (实例化websocket对象)
              socket = new WebSocket(url);
 
              //监听服务器发送消息
@@ -125,20 +151,26 @@
                  const data=JSON.parse(e.data)
                 console.log('message=',e.data,data)
                 let li=document.createElement('li')
+                let pname=document.createElement('p')
                 li.className=data.type;
+                pname.className='p1'
                 let time=new Date(data.time)
                 if(data.type==='login'){
+
                     li.innerHTML=`${data.username}进入聊天室（${time.toLocaleDateString()}${time.toLocaleTimeString()}）`
+                    pname.innerHTML=data.username
                 }else if(data.type==='logout'){
                     li.innerHTML=`${data.username}退出聊天室（${time.toLocaleDateString()}${time.toLocaleTimeString()}）`
                 }else if(data.type==='message'){
                     if(data.username===username.value){
                         li.className='active'
                     }
+                    
                     li.innerHTML=`${data.username}:${data.msg}`
                 }
-                msglist.appendChild(li)
 
+                box.appendChild(pname)
+                msglist.appendChild(li)
                 //把最后添加的li滚动到可视区域
                 li.scrollIntoView();
              }
@@ -159,10 +191,13 @@
              }
              //监听离开：当用户离开后自动执行close事件
              socket.onclose=function(){
+                //  username.value=''
                 console.log('close');
                 username.disabled=false;
                 btnLogin.disabled=false;
-             }
+
+             } 
+            
         }
         
         //给服务器发送消息：send()
@@ -177,11 +212,13 @@
 
                 //清空并自动获得焦点
                 msg.value=''
-                 msg.focus();
+                msg.focus();
         }
 
+        // const plist=box.getElementsByTagName('p')
         //退出
         btnLogout.onclick=function(){
+
             //如果需要通过消息去广播给其他用户退出状态，必须在断开前发送消息
             let data={
                 type:'logout',
@@ -189,8 +226,10 @@
                 msg:'',
                 time:Date.now()
             }
+            
             socket.send(JSON.stringify(data))
             socket.close();
+            box.innerHTML=''
         }
     </script>
 </body>

@@ -56,7 +56,7 @@ server.listen(PORT,()=>{
 // 监听客户端连接:当客户端连接websocket服务器时自动执行connection事件
 wsServer.on('connection', (client) => {
     // client：客户端对象，每个客户端对象会自动保存到wsServer.clients属性中
-
+    
     //监听客户端对象操作：发送消息，关闭连接
     client.on('message', (msg) => {
         // 当客户端给服务器发送消息时执行这里的代码

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02架构分层</title>
+</head>
+<body>
+    <h1>02架构分层</h1>
+    <div id="app">
+        <!-- 视图（模板） -->
+        Vue->数据：<span>{{className}}</span>
+
+        <!-- 修改输入框改变span的内容 -->
+        <p>
+            <input type="text" v-bind:value="className" v-on:input="changeClassName">
+        </p>
+
+         <!-- 该方法等效于上面的方法 -->
+        <p>
+            <input type="text" v-model="className">
+        </p>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+        // 使用Vue
+
+        //数据
+        const data={
+            className:'GZH5-2108'
+        }
+
+        const vm=new Vue({
+            // 关联视图：使用Vue接管div#app
+            el:'#app', //document.querySelector('#app')
+
+            // 关联数据
+            data:data,
+
+            //定义一些方法：事件处理函数
+            methods:{
+                changeClassName(e){
+                    this.className=e.target.value
+                }
+            }
+        })
+
+        console.log('vm',vm);
+ </script>
+</body>
+</html>

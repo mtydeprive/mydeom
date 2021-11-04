@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03响应式属性</title>
+</head>
+
+<body>
+    <h1>03响应式属性</h1>
+    <div id="app">
+        <!-- View视图层 -->
+        <!-- 能在视图层中使用的变量都是vm实例的属性 -->
+        <p>用户名：{{username}}</p>
+    </div>
+    <h4>原生js实现响应式属性</h4>
+    <div id="box">
+        <!-- 原生js实现响应式 -->
+        <p class="username"></p>
+        <p class="age"></p>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+        /**
+         * 03响应式属性 
+            *能监听到数据变化，当数据被修改时，会自动更新页面视图
+            * 原理 
+                *存储器属性  getter & setter
+                    >一般用于监听操作
+        */
+
+        //Model数据层
+        const model = {
+            username: 'laoxie'
+        }
+
+        //ViewModel控制层
+        const vm = new Vue({
+            // 关联视图层
+            el: '#app',
+
+            //关联数据层
+            data: model,
+        })
+        console.log('vm', vm);
+
+
+        //原生js
+        const myData={
+            //值属性：拥有值的属性
+            username:'tiantian',
+            // age:28
+            //存储器属性：getter & setter
+            get age(){
+                //getter：能监听age读取操作：当读取age属性时 ，自动执行这里的代码
+                console.log('getter');
+                return 28
+            },
+            set age(newValue){
+                // setter：能监听age属性的修改操作，当age被修改时，自动执行这里的代码
+                console.log('setter',newValue);
+
+                age.innerText=newValue;
+            }
+        }
+
+        // myData.age;//28
+        // myData.age=18;
+
+        const box=document.querySelector('#box')
+        const username=box.querySelector('.username')
+        const age=box.querySelector('.age')
+        username.innerText=myData.username;
+        age.innerText=myData.age;
+        //默认当数据有变化时无法监听数据的修改操作
+        // myData.username='tiantian plus';
+
+        //如果能监听到数据修改，我们就可以通过节点操作更新视图
+        //使用存储器属性可以监听数据的变化
+        //后期可通过Object.defineProperty(target,prop,descriptor)把属性变成存储器属性
+        // Object.defineProperty(myData,'username',{
+        //     get(){
+        //         return 'tiantian'
+        //     },
+        //     set(newValue){
+        //         console.log('newValue',newValue);
+        //     }
+        // })
+    </script>
+</body>
+
+</html>

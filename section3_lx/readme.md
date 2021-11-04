@@ -651,3 +651,106 @@
                         socket.send()
                     ```
 * node.scollIntoView()  把node节点滚动到可视区域
+
+## day2-3
+
+### 面试题
+* v-show与v-if的区别
+    > 有频繁显示、隐藏的操作建议使用v-show
+
+### 知识点
+* Vue使用
+    * 安装 
+        * 官网下载
+        * npm
+        * script标签引用在线代码
+    * 版本
+        * 按环境分
+            * 开发版本：developement
+                > 为压缩，包含调试信息代码
+            * 生产版本：production
+                > 压缩、合并，删除调试、提示代码
+
+* 架构分层
+    > 复杂的软件必须有清晰合理的架构，更容易开发，维护和测试，所以需要进行分层
+    * 视图层
+    * 数据层
+    * 控制层
+
+    * MVC
+        * M：Model      数据模型
+        * V：View       视图
+        * C：Controller 控制器
+    * MVP
+        * M：Model
+        * V：View
+        * P：Presenter  优化后的控制器
+    * MVVM
+        * M：Model
+        * V：View
+        * VM：ViewModel 控制器
+
+* Vue指令
+    > 指令：一种特殊的标签属性
+    * v-bind    绑定数据到属性
+    * v-on      绑定事件
+    * v-model   双向数据绑定
+    * v-for     遍历啥时间
+    * v-show    是否显示
+
+* 数据绑定
+    * 单向绑定
+        > Model -> View
+        * {{}}  绑定数据到标签内容
+        * v-bind 绑定数据到标签属性
+* 列表渲染：v-for
+    > 可遍历数组，对象，字符串，数字，和一些可迭代的数据
+    * `v-for="item in data"`    等效于原生js中的for...in循环
+    * `v-for="item of data"`    等效于原生js中的for...of
+    ```js
+        // 循环语句
+        for(let i=0;i<10;i++){}
+        for(let key in obj){ //obj={a:10,b:20}
+            // key:索引、键
+        }
+        while(num>5){
+
+        }
+        for(let item of data){
+            //map,set,modelist,htmlcollection,String,array...
+        }
+    ```
+* 条件渲染
+    * v-show
+    * v-if/v-else/v-else-if
+
+* 响应式属性
+    * 特点：能监听到数据变化，当数据被修改时，会自动更新页面视图
+    * 原理：
+        * 对象：存储器属性(getter & setter)
+            > Vue实例化时，Vue会递归遍历data中的所有属性，如果是普通属性，则通过`Object.defineProperty()`把它们设置为存储器属性（getter & setter），并写入Vue实例
+        * 数组：重写数组原型
+            > Vue实例化时，Vue会递归遍历data中所有属性，如果是数组，则重写数值原型，在重写的数组原型中声明了`push,pop,shift,unshift,spplice,sort,reverse`
+            ```js
+                hobby.__proto__={
+                    push(){
+                        //渲染视图
+                        render()
+                    }
+                    __proto__:Array.prototype
+                }
+
+                vm.hobby.push()
+                vm.hobby.forEach()
+            ```
+    * 在vue中如何设置响应式属性
+        * 初始化设置data数据
+        * Vue.set(target,pro,value)
+            > target不能是vm实例，也不能是data根属性
+            ```js
+                //以下为错误操作
+                Vue.set(vm,'gender','男')
+                Vue.set(vm.$data,'gender','男')
+            ```
+* 编程思维的改变
+    * 节点操作思维 ->数据操作思维（数据驱动）
