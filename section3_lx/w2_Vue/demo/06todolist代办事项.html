@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06todolist代办事项</title>
+  <link rel="stylesheet" href="./css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>06todolist代办事项</h1>
+    <div id="app">
+     <!-- 只有在vm实例中的属性（包含原型属性）才能在视图中使用 -->
+     <div class="input-group mb-3">
+      <input type="text" class="form-control" ref="input" v-model="todo" >
+      <button class="btn btn-success" v-on:click="addItem">添加</button>
+    </div>
+     <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">代办事项</th>
+          <th scope="col">添加时间</th>
+          <th scope="col">是否完成</th>
+          <th scope="col">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item,idx) in datalist">
+          <th scope="row">{{idx+1}}</th>
+          <td>{{item.todo}}</td>
+          <td>{{formatDate(item.addtime)}}</td>
+          <td>{{item.done ? "是":"否"}}</td>
+          <td>
+            <button type="button" class="btn btn-outline-success btn-sm" v-on:click="completeItem(item.id)">{{item.done?'取消':'完成'}}</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="removeItem(item.id)">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+
+  <script src="./js/vue.js"></script>
+  <script>
+  /**
+     06todolist待办事项
+       * Vue在实例化时
+       * 会递归遍历data中所有的属性，
+           * 如是对象则把它通过Object.defineProperty()转成存储器属性，并写入vm实例，
+           * 如是数组，则重写它的原型，并写入vm实例
+       * 会遍历methods中所有的方法，并写入vm实例
+    */
+    const vm=new Vue({
+      el:'#app',
+      data:{
+        todo:"",
+        datalist:[{
+                    id: 1,
+                    todo: '定个小目标，全球旅行',
+                    done: true,
+                    addtime: Date.now()
+                }, {
+                    id: 2,
+                    todo: '赚他一个亿津巴布韦币',
+                    done: false,
+                    addtime: Date.now() + 3600*1000
+                }, {
+                    id: 3,
+                    todo: '迎娶白富美，达到人生巅峰',
+                    done: false,
+                    addtime: Date.now() + 3600 * 1000 * 5
+                }]
+          },
+          methods:{
+            //时间
+            formatDate(date){
+              return new Date(date).toLocaleDateString()
+            },
+            addItem(){
+              //数据驱动思维：要给页面添加一个tr节点，只需要给datalist添加一条数据
+              const newData={
+                id:parseInt(Math.random()*10000),
+                todo:this.todo,
+                done:false,
+                addtime:Date.now()
+              }
+              this.datalist.unshift(newData)
+
+              //清空并自动获得焦点
+              this.todo=""
+
+              this.$refs.input.focus()
+            },
+            completeItem(id){
+                this.datalist.forEach(item=>{
+                    if(item.id===id){
+                      item.done=!item.done;
+                    }
+                })
+            },
+            removeItem(id){
+              // this.datalist.splice(idx,1)
+                this.datalist=this.datalist.filter(item=>item.id!=id)
+            }
+
+          }
+    })
+  </script>
+</body>
+
+</html>

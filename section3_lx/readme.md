@@ -754,3 +754,93 @@
             ```
 * 编程思维的改变
     * 节点操作思维 ->数据操作思维（数据驱动）
+
+## day2-4
+
+### 面试题
+* computed与methods、watch、data的区别
+    > computed计算属性是基于它们的依赖进行缓存的。计算属性computed只有在它的相关依赖发生改变时才会重新求值。这就意味着只要计算依赖的值还没有发生改变，多次访问计算属性会立即返回之前的计算结果，而不必再次执行函数。而对于method ，只要发生重新渲染，method 调用总会执行该函数。
+    * computed vs methods   优先使用computed
+    * computed vs watch     优先使用computed
+
+### 复习
+* 指令
+    * v-bind
+    * v-on
+    * v-mobel
+    * v-show
+    * v-for
+    * v-if/v-else/v-else-if
+* 数据绑定
+    * 单向
+        * {{}}
+        * v-bind:attr
+            > style,class
+    * 双向
+        * v-model
+            * 语法糖：v-bind:value + v-on:input
+        * 原理：单向+事件
+    
+* 事件绑定：v-on
+    > 格式：v-on:click="事件处理函数或事件处理函数中的代码"
+    ```js
+        <button v-on:click="handle"></button>
+        <button v-on:click="handle(10)"></button>
+        <button v-on:click="index=id"></button>
+    ```
+* 列表渲染：v-for
+    > data 可以是数组，对象，字符串，数字，可迭代的数据
+    * v-for="item in data"
+    * v-for="item of data"
+* 条件渲染
+    * v-show
+    * v-if
+    * 三元运算
+* 响应式属性
+    * 原理
+        * 对象
+        * 数组
+
+    * 属性特性
+        * 值属性
+        * 存储器属性
+            * get
+            * set
+    * 如何添加响应式属性
+        * 初始化时在data中设置
+        * Vue.set(target,prop,value)
+
+### 知识点
+* ref 引用
+    > 通过`this.$refs.xxx`获取引用
+* 实例化选项
+    * el
+    * data
+    * methods
+    * computed  计算属性
+    * watch     监听属性修改
+* 修饰符
+    * 事件修饰符：`v-on:事件类型.修饰符`
+        * 按键修饰符
+            * let,up,right,down
+            * enter
+            * tab
+            * esc
+            * space
+        * 鼠标事件修饰符
+            * stop
+            * prevent
+            * capture
+            * self 只当在event.target 是当前元素自身时触发处理函数(**e.target**===**e.currentTarget**)
+                * e.target:触发事件的元素
+                * e.currentTarget：绑定事件的元素
+            * once 事件将只会触发一次
+        * v-model 修饰符
+            * lazy      input触发改成change触发
+            * number    输出值为number类型
+            * trim      自动清楚前后空格
+* 简写指令
+    * v-on:     ->  @
+    * v-bind:   ->  :
+* 事件：v-on:click="handle"
+    * event: 事件处理函数的第一个参数
