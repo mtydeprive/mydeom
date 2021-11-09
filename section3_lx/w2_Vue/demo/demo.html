@@ -5,24 +5,167 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>todolist代办事项</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
 </head>
 
 <body>
-    <div id="app">
-        <span v-bind:title="message">
-            鼠标悬停几秒钟查看此处动态绑定的提示信息！
-        </span>
+    <div class="container">
+        <h1>todolist代办事项</h1>
+        <div id="app">
+            <!-- 只有在vm实例中的属性（包含原型属性）才能在视图中使用 -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" ref="input" v-model="todo" @keyup.enter="addItem">
+                <button class="btn btn-success" @click="addItem">添加</button>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-primary btn-sm" @click="completeItems">批量完成</button>
+                <button type="button" class="btn btn-danger btn-sm" @click="removeItems">批量删除</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" v-model="checkAll"></th>
+                        <th scope="col">#</th>
+                        <th scope="col">代办事项</th>
+                        <th scope="col">添加时间</th>
+                        <th scope="col">是否完成</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,idx) in datalist" :data-id="item.id" @click="selectItem(item.id)">
+                        <th><input type="checkbox" :checked="selectIds.includes(item.id)"></th>
+                        <th scope="row">{{idx+1}}</th>
+                        <td>{{item.todo}}</td>
+                        <td>{{formatDate(item.addtime)}}</td>
+                        <td>{{item.done?'是':'否'}}</td>
+                        <td>
+                            <button type="button"
+                                class="btn btn-outline-success btn-sm" @click.stop="completeItem(item.id)">{{item.done?'取消':'完成'}}</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" @click.stop="removeItem(item.id)">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="p-3">
+                总数：{{datalist.length}}   完成：{{donelist.length}}   未完成：{{undonelist.length}}
+            </div>
+        </div>
     </div>
 </body>
 <script src="./js/vue.js"></script>
 <script>
-    const vm=new Vue({
-        el:'#app',
-        data:{
-            message:'页面加载于'+new Date().toLocaleString()
+    /**
+        06todolist待办事项
+          * Vue在实例化时
+          * 会递归遍历data中所有的属性，
+              * 如是对象则把它通过Object.defineProperty()转成存储器属性，并写入vm实例，
+              * 如是数组，则重写它的原型，并写入vm实例
+          * 会遍历methods中所有的方法，并写入vm实例
+          * 会遍历computed中所有的属性，并写入vm实例
+       */
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            todo: "",
+            selectIds:[],
+            // checkAll:false,
+            datalist: [{
+                id: 1,
+                todo: '定个小目标，全球旅行',
+                done: true,
+                addtime: Date.now()
+            }, {
+                id: 2,
+                todo: '赚他一个亿津巴布韦币',
+                done: false,
+                addtime: Date.now() + 3600 * 1000
+            }, {
+                id: 3,
+                todo: '迎娶白富美，达到人生巅峰',
+                done: false,
+                addtime: Date.now() + 3600 * 1000 * 5
+            }],
+        },
+
+        //
+        computed:{
+            donelist(){
+                return this.datalist.filter(item=>item.done)
+            },
+            undonelist(){
+                return this.datalist.filter(item=>!item.done)
+            },
+
+            checkAll:{
+                get(){
+                    return this.datalist.every(item=>{
+                        return this.selectIds.includes(item.id)
+                    })
+                },
+                set(newValue){
+                        if(newValue){
+                            this.selectIds=this.datalist.map(item=>item.id)
+                        }else{
+                            this.selectIds=[]
+                        }
+                }
+            },
+
+        },
+        methods: {
+            formatDate(date) {
+                return new Date(date).toLocaleDateString()
+            },
+            addItem() {
+                //数据驱动思维：要给页面添加一个tr节点，只需要给datalist添加一条数据
+                const newData = {
+                    id: parseInt(Math.random() * 10000),
+                    todo: this.todo,
+                    done: false,
+                    addtime: Date.now()
+                }
+                this.datalist.unshift(newData)
+
+                //清空并自动获得焦点
+                this.todo = ""
+
+                this.$refs.input.focus()
+            },
+            completeItem(id){
+                this.datalist.forEach(item=>{
+                    if(item.id===id){
+                        item.done=!item.done;
+                    }
+                })
+            },
+            removeItem(id){
+                this.datalist=this.datalist.filter(item=>item.id!=id)
+            },
+            selectItem(id){
+                if(!this.selectIds.includes(id)){
+                    this.selectIds.push(id)
+                }else{
+                    this.selectIds=this.selectIds.filter(item=>item!=id)
+                }
+            },
+
+            completeItems(){
+                this.datalist.forEach(item=>{
+                    if(this.selectIds.includes(item.id)){
+                        item.done=true
+                    }
+                })
+            },
+            
+            removeItems(){
+                this.datalist=this.datalist.filter(item=>{
+                    return !this.selectIds.includes(item.id)
+                })
+            },
         }
     })
-    
 </script>
+
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17定义按钮组件（高级版）</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+
+<body>
+    <h1>17定义按钮组件（高级版）</h1>
+    <div id="app">
+        <my-button class="btn-danger" v-bind:index="0" :list="[10,20,30]" :age="20"  text="删除"></my-button>
+        <my-button class="btn-primary" index="1" text="编辑"></my-button>
+        <my-button class="btn-success" text="完成"></my-button>
+
+        <my-button class="btn-success">成功</my-button>
+        <my-button class="btn-danger">失败</my-button>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script>
+        /**
+            *17定义按钮组件（高级版）
+                * props属性：成为组件实例的属性
+                * 非props属性：成为组件根节点的html属性
+         */
+        Vue.component('myButton', {
+            //数组接收props，无法校验数据类型
+            // props:['index'],
+            // inheritAttrs:false, //不继承attrs（关闭后，非props属性不会自动成为根节点html属性)
+            // props数据类型校验
+            props:{
+                //支持单个数据类型
+                // index:Number,
+
+                //支持多个数据类型
+                // index:[Number,String],
+                //属性必填
+                // index:{
+                //     type:[Number,String],
+                //     required:true
+                // },
+                //设置默认值,基本数据类型
+                index:{
+                    type:[Number,String],
+                    default:0
+                },
+
+                //设置默认值,引用数据类型
+                list:{
+                    type:Array,
+                    default:function(){
+                        return []
+                    }
+                },
+                //自定义类型校验:validator
+                age:{
+                    type:Number,
+                    // age限定在18到30岁之间
+                    validator(value){
+                        return value>=18&&value<=30
+                    }
+                },
+                text:{
+                    type:String,
+                    default:'按钮'
+                }
+            },
+            data() {
+                console.log('myButton',this);
+                return {}
+            },
+            computed:{
+                donelist(){
+                    return this.list.map(item=>item*item)
+                }
+            },
+            // template: `<button class="btn">按钮{{index+1}} {{donelist}}</button>`,
+            template: `<button class="btn"><slot></slot></button>`,
+            methods:{
+               
+            }
+        })
+      
+        const vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+
+        })
+    </script>
+</body>
+
+</html>

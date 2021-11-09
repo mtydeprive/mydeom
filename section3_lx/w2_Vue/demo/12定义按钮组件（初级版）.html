@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12定义按钮组件（初级版）</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+
+<body>
+    <h1>12定义按钮组件（初级版）</h1>
+    <div id="app">
+        <p>我的组件</p>
+        <mybutton></mybutton>
+        <mybutton></mybutton>
+        <p>你的组件</p>
+        <youbutton></youbutton>
+        <youbutton></youbutton>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script>
+        /**
+            *12定义按钮组件（初级版）
+         */
+        Vue.component('mybutton', {
+            data() {
+                return {}
+            },
+            template: `
+                <button class="btn btn-primary btn-sm" @click="hello">按钮</button>
+            `,
+            methods:{
+                hello(){
+                    alert('nihao')
+                }
+            }
+        })
+        Vue.component('youbutton', {
+            data() {
+                return {}
+            },
+            template: `
+                <button class="btn btn-success btn-sm" @click="hello">按钮</button>
+            `,
+            methods:{
+                hello(){
+                    alert('buhao')
+                }
+            }
+        })
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+
+        })
+    </script>
+</body>
+
+</html>

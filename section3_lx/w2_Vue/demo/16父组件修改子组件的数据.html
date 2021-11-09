@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16父组件修改子组件的数据</title>
+</head>
+<body>
+    <h1>16父组件修改子组件的数据</h1>
+    <div id="app">
+        <child ref="myson"></child>
+        <button @click="$children[0].counter++">父组件通过$children修改子组件counter</button>
+        <button @click="$refs.myson.counter++">父组件通过ref修改子组件counter</button>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+       /**
+         *  16父组件修改子组件的数据 
+            * 方式一：把父组件方法传入子组件中执行
+            * 方式二：自定义事件（把父组件方法作为事件处理函数）
+                > this.$emit(event,data)
+                * 语法糖：v-bind:qty.sync="qty" 
+                    > 等效于： v-bind:qty="qty" v-on:update:qty="qty=$event"
+            * 方式三：在子组件中直接通过父组件实例修改
+                > this.$parent
+         */
+        const child={
+            data(){
+                return{
+                    counter:1
+                }
+            },
+         template:`<div>
+            child counter:<button @click="counter++">{{counter}}</button>
+            </div>`
+        }
+
+
+        const vm = new Vue({
+            el:'#app',
+            data:{
+                qty:10
+            },
+            components:{
+                child
+            },
+            methods:{
+                
+            }
+        })
+    </script>
+</body>
+</html>

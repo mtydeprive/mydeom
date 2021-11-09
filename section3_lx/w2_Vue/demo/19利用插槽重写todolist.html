@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19利用插槽重写todolist</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+
+<body>
+    <h1>19利用插槽重写todolist</h1>
+    <div id="app">
+        <todo-list></todo-list>
+    </div>
+    <template id="todoContent">
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" v-model="checkAll"></th>
+                        <th scope="col">#</th>
+                        <th scope="col">代办事项</th>
+                        <th scope="col">添加时间</th>
+                        <th scope="col">是否完成</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 在tbody中直接使用todo-item组件会导致浏览器解析错误 -->
+                    <!-- <todo-item v-for="(item,idx) in list" :item="item" :idx="idx"></todo-item> -->
+                    <!-- 解决方案 -->
+                    <tr is="todo-item" v-for="(item,idx) in list" :item="item" :idx="idx" ></tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+    <template id="todoItem">
+        <tr @click="selectItem(item.id)">
+            <th><input type="checkbox"   :checked="selectIds.includes(item.id)"></th>
+            <th scope="row">{{idx+1}}</th>
+            <td>{{item.todo}}</td>
+            <td v-once>{{formatDate(item.addtime)}}</td>
+            <!-- <td v-once>{{formatDate(item.addtime)}}</td> -->
+            <td>{{date}}</td>
+            <td>{{item.done ? "是":"否"}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-success btn-sm"
+                @click.stop="completeItem(item.id)"  >{{item.done?'取消':'完成'}}</button>
+                <button type="button" class="btn btn-outline-danger btn-sm"
+                @click.stop="removeItem(item.id)" >删除</button>
+            </td>
+        </tr>
+    </template>
+    <script src="js/vue.js"></script>
+    <script>
+        /**
+            *19利用插槽重写todolist
+         */
+
+        // 事件总线：利用一个Vue实例作为事件的载体配合事件实现数据共享
+        const Bus = new Vue()
+
+        const todoForm = {
+            //接收父组件传入的函数
+            // props:['add'],
+            data() {
+
+                return {
+                    todo: ''
+                }
+            },
+            methods: {
+                addItem() {
+                    // this.add(this.todo)
+
+                    this.$emit('additem', this.todo)
+                    this.todo = ''
+
+                    this.$refs.input.focus();
+                }
+            },
+            template: `
+             <div>
+                <div class="input-group mb-3">
+                 <input type="text" class="form-control" ref="input" v-model="todo" @keyup.enter="addItem">
+                 <button class="btn btn-success" @click="addItem">添加</button>
+                </div>
+             </div> 
+             `
+        }
+        const todoControl = {
+            props: ['removeItems','completeItems'],
+            template: `
+             <div >
+                <div class="text-end">
+                <button class="btn btn-primary btn-sm" @click.stop="completeItems">批量完成</button>
+                <button  class="btn btn-danger btn-sm" @click.sotp="removeItems">批量删除</button>
+                </div>
+             </div> 
+             `
+        }
+
+        const todoItem = {
+            props: ['item', 'idx'],
+            template: `#todoItem`,
+            inject:['selectItem','selectIds'],
+            computed:{
+                date(){
+                    console.log('date');
+                    return new Date(this.item.addtime).toLocaleDateString()
+                }
+            },
+            methods: {
+                completeItem(id) {
+                    Bus.$emit('complete', id)
+                },
+                removeItem(id) {
+                    Bus.$emit('remove', id)
+                },
+                formatDate(d){
+                    console.log('formatDate');
+                    return new Date(d).toLocaleDateString()
+                }
+            },
+            
+        }
+        const todoContent = {
+            props: ['list'],
+            inject:['selectIds','selectAll'],
+            computed:{
+                checkAll:{
+                    get(){
+                        return this.list.every(item=>this.selectIds.includes(item.id))
+                    },
+                    set(newValue){
+                        // this.selectAll(newValue)
+                        this.$parent.selectIds.splice(0,this.$par)
+                        if(newValue){
+                            const ids=this.list.map(item=>item.id)
+                            this.$parent.selectIds.push(...ids)
+                        }
+                    }
+                },
+            },
+            template: `#todoContent`,
+            components: {
+                todoItem
+            },
+        }
+
+        const todoFooter = {
+            //接收父组件传入的数据
+            props: ['list'],
+            computed: {
+                donelist() {
+                    return this.list.filter(item => item.done)
+                },
+                undonelist() {
+                    return this.list.filter(item => !item.done)
+                }
+            },
+            template: `
+                <div class="p-3">
+                    <slot :donelist="donelist" :undonelist="undonelist">总数：{{list.length}} 完成：{{donelist.length}} 未完成：{{undonelist.length}}</slot>
+                </div>
+             `
+        }
+
+        Vue.component('TodoList', {
+            data() {
+           
+                Bus.$on('remove', this.removeItem)
+                Bus.$on('complete', this.completeItem)
+             
+
+                return {
+                    selectIds: [],
+                    datalist: [{
+                        id: 1,
+                        todo: '定个小目标，全球旅行',
+                        done: true,
+                        addtime: Date.now()
+                    }, {
+                        id: 2,
+                        todo: '赚他一个亿津巴布韦币',
+                        done: false,
+                        addtime: Date.now() + 3600 * 1000
+                    }, {
+                        id: 3,
+                        todo: '迎娶白富美，达到人生巅峰',
+                        done: false,
+                        addtime: Date.now() + 3600 * 1000 * 5
+                    }],
+                }
+            },
+
+            //依赖注入
+            provide:function(){
+                return{
+                    selectItem:this.selectItem,
+                    selectIds:this.selectIds,
+                    selectAll:this.selectAll
+                }
+            },
+
+            template: `
+                <div class="container">
+                    <todo-form :add="addItem" v-on:additem="addItem" ref="todoForm"></todo-form>
+                    <todo-control :completeItems="completeItems" :removeItems="removeItems"></todo-control>
+                    <todo-content  :list="datalist" ></todo-content>
+                    <!--   <todo-footer :list="datalist">
+                      <template v-slot:default="scope"> 
+                        <template v-slot="scope">
+                       <strong>total:</strong>{{datalist.length}}  
+                       complete:{{scope.donelist.length}}
+                       uncomplate:{{scope.undonelist.length}}
+                        </template>
+                    </todo-footer>-->
+                    <todo-footer v-slot="{donelist,undonelist}" :list="datalist">
+                    <p><strong>total:</strong>{{datalist.length}}  </p>
+                    <p>complete:{{donelist.length}} </p>
+                        <p>uncomplate:{{undonelist.length}} </p>
+                    </todo-footer>
+                </div>
+            `,
+            components: {
+                todoForm,
+                todoControl,
+                todoContent,
+                todoFooter
+            },
+            methods: {
+                //添加
+                addItem(todo) {
+                    // console.log(arguments);
+                    const newData = {
+                        id: parseInt(Math.random() * 10000),
+                        //需要输入框中的内容
+                        todo,
+                        done: false,
+                        addtime: Date.now()
+                    }
+                    this.datalist.unshift(newData)
+                },
+                //完成
+                completeItem(id) {
+                    this.datalist.forEach(item => {
+                        if (item.id === id) {
+                            item.done = !item.done;
+                        }
+                    })
+                },
+                //删除
+                removeItem(id, e) {
+                    this.datalist = this.datalist.filter(item => item.id != id)
+                },
+                //单选
+                selectItem(id) {
+                    if (!this.selectIds.includes(id)) {
+                        this.selectIds.push(id)
+                    } else {
+                        // this.selectIds = this.selectIds.filter(item => item != id)
+                        const idx=this.selectIds.findIndex(item=>item===id)
+                        this.selectIds.splice(idx,1)
+                    }
+                },
+                //全选
+                selectAll(all){
+                    if(all){
+                        //由于是通过provide/inject传入的值所有以下写法达不到响应式结果
+                        // this.selectIds=this.datalist.map(item=>item.id)
+                        const ids=this.datalist.map(item=>item.id)
+                        this.selectIds.splice(0,this.selectIds.length)
+                        this.selectIds.push(...ids)
+                    }else{
+                        this.selectIds.splice(0,this.selectIds.length)
+                    }
+                },
+                //批量完成
+                completeItems(){
+                    this.datalist.forEach(item=>{
+                        if(this.selectIds.includes(item.id)){
+                            item.done=true;
+                        }
+                    })
+                },
+                //批量删除
+                removeItems(){
+                    this.datalist=this.datalist.filter(item=>{
+                        return !this.selectIds.includes(item.id)
+                    })
+                },
+               
+            },
+        })
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+
+        })
+    </script>
+</body>
+
+</html>

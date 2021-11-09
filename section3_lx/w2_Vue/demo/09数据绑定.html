@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09数据绑定</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+<body>
+    <h1>09数据绑定</h1>
+    <div id="app">
+        <p><span v-pre>{{}}</span>:{{title}}</p>
+        <p>v-text:<span v-text="title">原来的内容</span></p>
+        <p>v-html:<span v-html="title">原来的内容</span></p>
+        <p>v-bind:<span v-bind:title="title">原来的内容</span></p>
+        <p>v-model:<input v-model="title" /></p>
+    </div>
+    
+    <script src="js/vue.js"></script>
+    <script>
+        
+        new Vue({
+           el:'#app',
+           data:{
+               title:'hello <strong>everybody</strong>'
+           }
+        })
+    </script>
+</body>
+</html>

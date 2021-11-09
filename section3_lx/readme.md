@@ -818,8 +818,33 @@
     * data
     * methods
     * computed  计算属性
+        * 原理：getter+setter，特点：缓存
+        ```js
+            const data={
+                a:10
+            }
+            const vm=new Vue({
+                computed:{
+                    checkAll(){
+                        return true
+                    },
+                    checkAll:{
+                        get(){
+                            return data.a
+                        },
+                        set(val){
+                            data.a=val;
+                        }
+                    }
+                }
+            })
+            vm.checkAll
+            vm.checkAll=false;
+        ```
     * watch     监听属性修改
+        > 能监听实例下的属性（包括子属性）
 * 修饰符
+    > 指令完整格式：v-name：参数。修饰符="值"
     * 事件修饰符：`v-on:事件类型.修饰符`
         * 按键修饰符
             * let,up,right,down
@@ -844,3 +869,383 @@
     * v-bind:   ->  :
 * 事件：v-on:click="handle"
     * event: 事件处理函数的第一个参数
+        * $event
+    * 参数
+        > v-on:click="事件处理函数(参数)"
+
+## day2-5
+
+### 知识点
+* 梳理与总结
+    ```js
+        const vm=new Vue(options)
+    ```
+    * 类(构造函数)：Vue
+        * 属性
+        * 方法（全局方法、静态方法）
+            * Vue.set()
+            * Vue.delete()
+    * 实例/原型：vm/Vue.prototype
+        * 属性
+            * 内置属性
+                > `$`开头
+                * $refs
+            * 私有属性
+                > `_`开头
+            * 自定义属性
+                > 来源于data，computed，methdos等
+        * 方法
+            * $set()
+            * $delete()
+            * $watch()
+        * 实例化选项
+            * el
+            * data
+            * methods
+            * computed
+            * watch
+        * 指令
+            * v-bind    -> :
+            * v-model
+            * v-on      -> @
+            * v-for 
+            * v-show
+            * v-if/v-else-if/v-else
+            * v-text
+            * v-html
+                >  实际开发中要慎用v-html，避免XSS（跨域脚本攻击），只有确认html内容安全的情况下才使用v-html（不要用v-html直接显示用户输入的内容）
+* 组件化开发
+    * 模块化
+        * 复用
+        * 分工
+        * 维护
+    * 什么是组件化
+        > 在模块化的基础上把一些相关操作组合到一起使用的开发模式，组件化开发就是把一个大的模块拆分成若干个独立的小模块，然后再组装起来实现一个完整功能的开发模式
+    * 为什么要组件化
+        * 为了更好的复用代码
+        * 为了更容易一分工
+        * 为了后期更方便维护
+    * 如何做组件化
+        * 学会划分组件
+        * 学会定义组件
+        * 学会使用组件
+* 定义组件
+    > 一个组件就是一个Vue的实例，所有组件拥有与Vue实例几乎一致的配置选项
+    * 全局组件：Vue.component(name,options)
+    * 局部组件：components:{name:options}
+    * options选项
+        * 没有el
+        * data必须为函数类型：为了复用，每个组件实例必须为独立存在的
+* 组件的使用
+    > 定义一个组件就相当于创建一个标签
+* 组件要求
+    * data必须为function类型
+    * 每个组件必须只有一个根元素
+    * 注册时组件名可以是kebab-case或PascalCase，但在html页面上使用时，必须写成遵循W3C规范中的自定义组件名(字母全小写或包含一个连字符)
+
+* 组件渲染
+    > 组件渲染过程
+    1. 先查找是否符合提供render，有则渲染，否则进入第2步
+    2. 查找是否有template，有则把template中的内容编译到render，无则报错
+    * render：组件渲染函数
+        * createElement(name,props,children)创建虚拟节点（对象）
+            * name：节点名称
+            * props：节点属性
+            * children：子节点
+        ```js
+            {
+                render(createElement){
+                    return createElement()
+                }
+            }
+        ```
+    * template:组件模板
+        > Vue中自带一个编译器，编译器会把template中的代码编译到render函数中生成虚拟节点
+* 根实例渲染
+    > 根实例渲染过程 
+    1. 先查找是否有**render**，有则渲染，无则进入第2步
+    2. 查找是否有**template**，有则把template编译到render，没有进入第3步
+    3. 把**el**的outerHTML(标签本身+innerHTML)作为template
+
+* 组件通讯
+    > 每一个组件都是相互独立的，要使用其他组件的数据，必须采用通讯方式传递数据
+    * 父->子：把数据从父组件传入组件
+        1. 父组件操作：给子组件定义属性，并传递父组件数据
+        2. 子组件操作：通过props选项接收父组件数据，props中的数据会自动写入组件实例
+        ```js
+        // todolist -> todofooter
+        // todolist -> todocontent -> todoitem          
+        ```
+    * 子->父：
+        * 方式一：父组件方法传递到子组件执行，并回传数据
+            1. 父组件操作：定义一个函数，并通过props传递到子组件
+            2. 子组件操作：接收传入函数，并在合适的位置执行，并回传数据
+        * 方式二：自定义事件（推荐）
+            1. 父组件操作：给子组件自定义事件（如:v-on:show），并使用父组件的方法做为事件处理函数（handle）
+            2. 子组件操作：通过$emit()触发自定义事件并传递数据
+        * 兄弟->兄弟（了解）
+            * 方式一
+                1. 组件A -> 父组件
+                2. 父组件 -> 组件B
+            * 方式二：状态提升
+                > 把共享数据放到他们共同的父级
+        * 深层级组件通讯
+            * 方式一：逐层传递（不推荐）
+                > 繁琐、痛苦
+            * 方式二：Bus事件总线
+                > 利用自定义事件+触发实现深层及组件通讯
+                1. 创建Bus实例
+                2. 绑定事件
+                    > 在需要数据组件绑定事件
+                3. 触发事件，并传递数据
+                    > 在有数据的组件触发事件
+
+* 实例方法
+    * $on()     绑定事件
+    * $off()    移除事件
+    * $emit()   触发事件
+
+* ref
+    > this.$refs
+    * 用在普通标签：得到该标签对应的**节点**引用
+    * 用在组件中：得到该组件对应的**实例**引用
+
+* 单向数据流
+    > 谁的数据谁来修改
+    * 在todolist组件中修改datalist会影响todolist组件
+    * 反之不行，不能在todofooter中修改父组件传入的数据
+    ```js
+        <todolist> --{datalist}-> <todofooter>
+    ```
+* 双向数据流
+    >可以在任意位置修改数据
+
+### 练习
+* 完成选择数据功能
+* 完成批量操作功能
+
+## day3-1
+
+### 复习
+* 组件化开发
+    * 定义
+        > 一个组件就是一个Vue实例，拥有与Vue实例化时几乎一致的配置选项
+        * 全局：Vue.component(name,options)
+        * 局部：components:{name:options}
+
+
+        > 定义一个组件相当于创建一个标签，并创建了一个**组件实例**，每一个组件都是一个**独立模块**
+    * options 配置选项
+        * data必须为函数形式
+        * 没有el
+        * render
+        * template
+
+        ```js
+            //Vue实例
+            const vm=new Vue(options)
+
+            Vue.prototype.a=100;
+
+            Vue.component('parent',{
+                data(){
+                    return{name:'component'}
+                },
+                template:`<div>{{name}}-{{a}}<child></child></div>`,
+                components:{
+                    child:{}
+                }
+            });
+            // jQuery(); //new jQuery.fn.init()
+        ```
+    * 使用
+        >
+        ```js
+            <parent>
+            </parent>
+        ```
+    * 通讯  
+        * 父->子：props
+        * 子->父：
+            * 把父组件的方法传到子组件中执行
+            * 自定义事件
+        * 兄弟->兄弟
+            * 状态提升
+        * 深层级组件通讯
+            * 父逐层传递到子（不推荐）
+            * Bus事件总线
+
+### 知识点
+* 依赖注入 provide/ inject
+    > provide共享的数据不是响应式的（但如果提供的数据是引用数据类型，且引用数据是响应式的，则也能实现响应式通讯）
+    1. 父组件操作：父组件定义provide，并共享数据
+    2. 子组件操作：通过inject注入provide共享的数据
+
+* 利用组件层级操作
+    * 在子组件中修改父组件数据
+        * 方式一：把父组件方法传入子组件中执行
+        * 方式二：自定义事件（把父组件方法作为事件处理函数）
+            > this。$emit()
+            语法糖：v-bind：qty=sect
+        * 方式三：在子组件中直接通过父组件实例修改
+            > 
+        ```js
+            <pranet></parnet>
+            {
+                data(){
+                    return{
+                        qty:10
+                    }
+                },
+                  // 方式一: this.changeQty()
+                template:`<child :qty="qty" :changeQty="changeQty"></child>`
+
+                // 方式二：this.$emit('change')
+                template:`<child :qty="qty" v-on:change="changeQty"></child>`
+
+                // 方式二语法糖：等效于<child v-bind:qty="qty" v-on:update:qty="qty=$event">
+                // 子组件操作：this.$emit('update:qty',10)
+                template:`<child v-bind:qty.sync="qty"></child>`
+                methods:{
+                    changeQty(){
+                        this.qty++
+                    }
+                }
+            }
+
+            <child></child>
+            {
+                props:['qty'],
+                data(){
+                    //不能修改父组件传入的props
+                    //this.qty++
+
+                    //通过父组件实例修改它的数据，执行它的方法
+                    // 父组件实例
+                    return{
+
+                    }
+                }
+            }
+        ```
+    * 在父组件中修改子组件数据
+        * 方式一：$children(不推荐)
+            > 必须拿到对应索引值
+        * 方式二：ref
+            > ref用在组件上得到该组件实例的引用
+
+* 组件封装
+    * 非props属性(attrs,组件实例中通过$attrs获取)
+        > 父组件传递数据，但子组件不接收，此类属性会自动成为组件根节点的html属性(可通过{inheriAttrs:false}关闭)
+    * v-bind无参数绑定
+        ```js
+            <button v-bind="{a:10,b:60}"></button>
+            //等效于
+            <button v-bind:a="10" v-bind:b="60"></button>
+        ```
+    * props数据类型校验
+        * type
+        * required
+        * default
+        * validator
+
+### 练习
+* 完成按钮封装
+    * 可定制化
+        * 颜色
+        * 块级按钮
+        * 大小
+        * 线框按钮
+    * 事件绑定
+
+## day3-2
+
+### 复习
+* 依赖注入
+    * provide
+    * inject
+* 利用组件层级实现父子组件操作
+    * 在父组件操作子组件
+    * 子组件操作父组件
+* 组件封装
+    * 组件通讯
+    * props数据类型校验
+    * 非props（attr）
+        * setAttrbute()/attr()
+        * 点语法：node.idx=10/prop()
+            ```js
+                node.id='box'
+                img.src=
+            ```
+* v-bind无参数绑定
+    > 指令完整格式：v-name:参数.修饰符="值"
+    > v-model="username" -> v-bind:value + v-on:input
+
+###  知识点
+* 插槽：`<slot></slot>`
+    * 插槽默认值：当不使用插槽时显示的内容
+    * 默认插槽
+        > 默认插槽也有一个名字：default
+    * 具名插槽：有名字的插槽`<slot name="xxx"/>`
+        * name
+        * v-slot -> 简写：#
+    * 作用域插槽
+        > 利用v-slot的值实现子组件数据往父组件传递，实现特殊定制
+
+* 插槽与props的区别
+    * props：把数据传入组件，然后在组件中生成html结构
+    * 插槽：在父组件生成html结构再传入子组件
+
+* VueCLI(vue command line interface)
+    > webpack + babel
+    * 安装
+        ```js
+            npm install -g @vue/cli
+        ```
+    * 创建项目
+        ```bash
+            # 命令行创建项目
+            vue create <projectName>
+
+            # 可视化界面创建项目
+            vue ui
+        ```
+    * vue单文件组件
+        * template
+        * script
+            * render
+        * style
+
+* 版本
+    * 按环境分
+        * 开发版本development:vue.js,vue.development.js
+            > 未压缩，包含调试信息代码
+        * 生产版本production:vue.min.js,vue.production.js
+            > 压缩、合并，删除调试，提示代码
+    * 按模块化规范分
+        * commonJS: vue.common.js
+        * ESmodule:vue.esm.js
+        * AMD
+        * CMD
+        * UMD   通用模块化规范(支持以上模块和全局引用方式)
+    * 按编译方式分
+        * 完整版（运行时版+编译器）：vue.js
+            > template选项 -> render
+        * 运行时版(rentime): vue.runtime.js
+            > 使用`vue-template-compiler`把`<tempalte>->render`
+
+* ESModule
+    > ES6推出的模块化开发规范，把一个文件当做一个模块，一个模块的作用域是独立作用域，如何想要读取某个模块中的数据，必须导入导出（**只能在服务器环境中使用，只能引入js文件**）
+    * 导入：`import <module> from <url>`
+        * url:模块地址，必须为相对路径或绝对路径
+        ```js
+            import username from './user.js'
+        ```
+    * 导出：`export`
+        > export后只能跟`function`、`class`、`var`、`let`、`const`、`default`、`{}`
+        ```
+
+        ```
+### 练习
+* 利用插槽重写todolist
+* 移植todolist到vueCLI项目

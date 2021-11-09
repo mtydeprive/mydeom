@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10定义与使用组件</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+<body>
+    <h1>10定义与使用组件</h1>
+    <div id="app">
+        <h2>#app内容</h2>
+        <student></student>
+        
+    </div>
+    
+    <script src="js/vue.js"></script>
+    <script>
+        /**
+            *10定义与使用组件
+                * 定义
+                    * 全局组件：Vue.component(name,options)   
+                    * 使用
+                     <name></name>  
+         */ 
+        Vue.component('student',{
+            //组件模板：组件模板会被编译器最终编译到到render渲染方法中
+            template:`
+                <div id="box">
+                    <h4>虚拟节点</h4>
+                    <p>hello</p>
+                </div>
+            `
+            //渲染方法：组件要渲染什么内容需要在render中定义
+            // render(createElement){
+                // createElement(name,props,children)：创建虚拟节点（对象）
+                //name:节点名称
+                //props：节点属性
+                // children：子节点
+                // const vNode=createElement('div',null,'虚拟节点')
+                // const vNode=createElement(
+                //     'div',
+                //     {
+                //         //html属性
+                //         attrs:{
+                //             id:'box',
+                //             class:'box'
+                //         }
+                //     },
+                //     '虚拟节点'
+                // )
+                // const vNode=createElement(
+                //     'div',
+                //     {
+                //         //html属性
+                //         attrs:{
+                //             id:'box',
+                //             class:'box'
+                //         }
+                //     },
+                //     [
+                //         createElement('span',null,'虚拟节点'),
+                //         createElement('h4',null,'hello'),
+                //     ]
+                // )
+                // return vNode
+            // }
+        })
+
+        new Vue({
+           el:'#app',
+           data:{
+              
+           },
+           template:`
+            <div>template模板内容</div>
+           `
+        //    render(createElement){
+        //        return createElement('div',null,'render')
+        //    }
+        })
+    </script>
+</body>
+</html>

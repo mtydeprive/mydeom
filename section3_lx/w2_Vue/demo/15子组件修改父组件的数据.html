@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15子组件修改父组件的数据</title>
+</head>
+<body>
+    <h1>15子组件修改父组件的数据</h1>
+    <div id="app">
+        <child :qty.sync="qty" :changeqty="changeQty" @updateqty="changeQty"></child>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+       /**
+         *  15.子组件修改父组件的数据 
+            * 方式一：把父组件方法传入子组件中执行
+            * 方式二：自定义事件（把父组件方法作为事件处理函数）
+                > this.$emit(event,data)
+                * 语法糖：v-bind:qty.sync="qty" 
+                    > 等效于： v-bind:qty="qty" v-on:update:qty="qty=$event"
+            * 方式三：在子组件中直接通过父组件实例修改
+                > this.$parent
+         */
+        const child={
+            props:['qty','changeqty'],
+            template:`<div>
+                    child:{{qty}}
+                    <button @click="qty++">子组件修改props：qty</button>
+                    <button @click="changeqty">通过父组件方法changeQty修改qty</button>
+                    <button @click="$emit('updateqty')">通过自定义事件修改qty</button>
+                    <button @click="$emit('update:qty',100)">通过v-bind.sync修饰符修改qty</button>
+                    <button @click="$parent.qty++">通过$parent修改qty</button>
+                    </div>
+                `
+        }
+
+       const vm= new Vue({
+            el:'#app', 
+            data:{
+                qty:10
+            },
+            components:{
+                child
+            },
+            methods:{
+                changeQty(){
+                    this.qty++
+                }
+            }
+        })
+    </script>
+</body>
+</html>

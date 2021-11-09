@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18定义按钮组件（终极版）</title>
+    <link rel="stylesheet" href=".//css/bootstrap.css">
+</head>
+
+<body>
+    <h1>18定义按钮组件（终极版）</h1>
+    <div id="app">
+        <my-button class="btn-danger" ></my-button>
+        <my-button class="btn-primary" text="编辑"></my-button>
+        <my-button class="btn-success" text="完成"></my-button>
+
+        <my-button class="btn-success">成功</my-button>
+        <my-button class="btn-danger">失败</my-button>
+
+        <my-button class="btn-danger">
+            <!-- <template v-slot:default>
+                <span>编辑</span>
+            </template> -->
+            <span>编辑</span>
+            <template v-slot:en>
+                <em>edit</em>
+            </template>
+        </my-button>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script>
+        /**
+            *18定义按钮组件（终极版）
+                * props属性：成为组件实例的属性
+                * 非props属性：成为组件根节点的html属性
+         */
+        Vue.component('myButton', {
+            // props:['text'],
+            template:`<button class="btn">
+                    <!-- 默认插槽：组件标签内的内容默认显示到这里 -->
+                    <div class="default"><slot>按钮</slot></div>
+                    <!-- 具名插槽：指定的内容才会显示在这 -->
+                    <div class="en"><slot name="en">en</slot></div>
+                     </button>`
+        })
+      
+        const vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+
+        })
+    </script>
+</body>
+
+</html>
