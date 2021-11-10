@@ -137,7 +137,6 @@
             props: ['list', 'select','check'],
             data() {
                 return {
-                    selectIds:[]
                 }
             },
             template: `#todoContent`,
@@ -207,7 +206,6 @@
                         }
                     },
                     set(newValue) {
-                        console.log('checkAll', newValue);
                         if (newValue) {
                             this.selectIds = this.datalist.map(item => item.id)
                         } else {
@@ -274,10 +272,6 @@
                 }
 
             },
-            // mounted(){
-            //     console.log('todolist',this.$refs);
-            //     this.$refs.todoForm.$on('additem',this.addItem)
-            // }
         })
 
         const vm = new Vue({

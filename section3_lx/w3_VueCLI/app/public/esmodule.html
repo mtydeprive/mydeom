@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览器端的ESModule</title>
+</head>
+<body>
+    <h1>浏览器端的ESModule</h1>
+    <script type="module">
+        //在js中引用js 的方式
+         import score,{username} from './module/user.js'
+         console.log('username',username);
+         console.log('score',score);
+    </script>
+    <script type="module" src="./module/user.js"></script>
+</body>
+</html>

@@ -136,7 +136,7 @@
                     },
                     set(newValue){
                         // this.selectAll(newValue)
-                        this.$parent.selectIds.splice(0,this.$par)
+                        this.$parent.selectIds.splice(0,this.$parent)
                         if(newValue){
                             const ids=this.list.map(item=>item.id)
                             this.$parent.selectIds.push(...ids)
@@ -207,21 +207,13 @@
 
             template: `
                 <div class="container">
-                    <todo-form :add="addItem" v-on:additem="addItem" ref="todoForm"></todo-form>
+                    <todo-form :add="addItem" v-on:additem="addItem" ref="todoForm" ></todo-form>
                     <todo-control :completeItems="completeItems" :removeItems="removeItems"></todo-control>
                     <todo-content  :list="datalist" ></todo-content>
-                    <!--   <todo-footer :list="datalist">
-                      <template v-slot:default="scope"> 
-                        <template v-slot="scope">
-                       <strong>total:</strong>{{datalist.length}}  
-                       complete:{{scope.donelist.length}}
-                       uncomplate:{{scope.undonelist.length}}
-                        </template>
-                    </todo-footer>-->
                     <todo-footer v-slot="{donelist,undonelist}" :list="datalist">
-                    <p><strong>total:</strong>{{datalist.length}}  </p>
-                    <p>complete:{{donelist.length}} </p>
-                        <p>uncomplate:{{undonelist.length}} </p>
+                        <p><strong>total:</strong>{{datalist.length}}</p>
+                        <p>complete:{{donelist.length}}</p>
+                        <p>uncomplate:{{undonelist.length}}</p>
                     </todo-footer>
                 </div>
             `,
