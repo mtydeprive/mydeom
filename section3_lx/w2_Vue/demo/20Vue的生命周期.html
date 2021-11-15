@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20Vue的生命周期</title>
+</head>
+<body>
+    <h1>20Vue的生命周期</h1>
+    <div id="app">
+        <button @click="counter++">counter:{{counter}}</button>
+        <button @click="destroy">销毁Vue实例</button>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+        const vm=new Vue({
+            // el:'#app',
+            // template:"<div>Conuter:{{counter}}</div>",
+            // render(createElement){
+            //     return createElement('div',{},'render')
+            // },
+            data:{
+                counter:10
+            },
+            methods:{
+                destroy(){
+                    vm.$destroy()
+                }
+            },
+            //生命周期函数（钩子函数）
+            //创建阶段：beforeCreate+created
+                   beforeCreate(){
+                console.log('beforeCreate')
+            },
+            created(){
+                console.log('created')
+            },
+            
+            //只有渲染函数准备好后才进入挂载阶段
+            //挂载阶段： beforeMount+ mounted
+            beforeMount(){
+                console.log('beforeMount')
+            },
+            mounted(){
+                console.log('mounted')
+            },
+
+            //销毁阶段：beforeDestroy + destroyed
+            beforeDestroy(){
+                console.log('beforeDestroy')
+            },
+            destroyed(){
+                console.log('destroyed')
+            },
+
+            //更新阶段：beforeUpdate + updated
+            beforeUpdate(){
+                console.log('beforUpdate')
+            },
+            updated(){
+                console.log('updated')
+            },
+        })
+        vm.$mount('#app')
+    </script>
+</body>
+</html>

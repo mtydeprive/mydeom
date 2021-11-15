@@ -1085,7 +1085,7 @@
     * 在子组件中修改父组件数据
         * 方式一：把父组件方法传入子组件中执行
         * 方式二：自定义事件（把父组件方法作为事件处理函数）
-            > this。$emit()
+            > this.$emit()
             语法糖：v-bind：qty=sect
         * 方式三：在子组件中直接通过父组件实例修改
             > 
@@ -1249,3 +1249,420 @@
 ### 练习
 * 利用插槽重写todolist
 * 移植todolist到vueCLI项目
+
+## day3-3
+
+### 复习
+* ESModule
+    > 只能在服务器环境下使用
+    * 导入：import
+        * url 相对路径或绝对路径，只能引入js，只支持静态导入
+        ```js
+            // commonJS
+            require('./js/a.js')
+            const path='./js/a.js'
+            require(path)
+
+            //ESModole
+            import a from './js/a.js'
+            import a from path;// 不支持
+
+            //在webpack下进行了处理，所以支持以下写法
+            import Vue from 'vue'
+            import App from './App.vue'
+            import a from './js/a'
+
+            //引入目录
+            //1.查看目录中是否存在package.json中的module/main
+            //2.若无package.json，则引用目录下的index.js
+            import b from './js'
+        ```
+    * 导出：export
+* VueCLI
+    * webpack
+    * 单文件组件
+        * template
+        * script
+        * style
+* 插槽
+    > 可定制化
+
+### 知识点
+* 生命周期
+    * 搞懂以下问题
+        * 搞懂执行过程
+        * 搞懂有几个阶段
+        * 搞懂开发者在Vue的生命周期过程中能做什么
+    * 阶段
+        > 每个阶段都有相应的钩子函数（生命周期函数），这些函数在执行到相应的阶段时自动执行，用户可以在钩子函数中实现一些效果
+        * 创建阶段
+            > 初始化操作，注入属性，设置响应式属性
+            * beforeCreate
+            * created
+        * 挂载阶段
+            > 把渲染函数生成的虚拟节点挂在页面形成真实节点
+            * beforeMount
+            * mounted
+        * 更新阶段
+            > 虚拟DOM的重渲染与打补丁
+            * beforeUpdate
+            * updated
+        * 销毁阶段
+            > 当执行$destroy()/v-if时，切断所有的监听器和父子组件关系
+            * beforeDestroy -> Vue3:beforeUnmount
+            * destroyed -> Vue3:Unmounted
+
+* 虚拟节点
+    > 虚拟节点（Vistual Node）：一个结构类似于真实节点的js对象
+    * 页面渲染过程：
+        * 原生：节点操作 -> 页面渲染
+        * Vue：数据修改 -> diff算法对比虚拟节点前后状态 -> (得到差异的虚拟节点) -> 真实节点操作 -> 页面渲染
+            * 有效减少节点操作数量
+            * 异步更新：在一个时间周期内，所有的修改都进行合并
+            * diff算法
+        * 虚拟节点对比
+            > Vue会对比虚拟节点前后状态得到差异项
+            * 如何对比
+                * 只对比同级虚拟节点
+                * 根据类型进行对比
+                * 根据key值进行对比
+                    > 如没有提供key值，则按顺序对比
+    ```js
+        // 原生
+        <div id="box">
+            <span>1</span>
+            <strong>1</strong>
+        </div>
+        for(let i=1;i<=100;i++){
+            box.innerText=i;
+        }
+
+        //Vue
+        <div>
+            <span>{{qty}}</span>
+            <strong>1</strong>
+        </div>
+        data:{
+            qty:1
+        }
+        for(let i=1;i<=100;i++){
+            vm.qty=i;
+        }
+        {
+            type:'div',
+            attrs:{},
+            props:{},
+            chilren:[
+                {type:'span',chilren:'100'}
+                {type:'strong',chilren:'1'}
+                 {
+                    type:'ul',
+                    chilren:[
+                        {type:'li',children:'A',key:1}
+                        {type:'li',children:'B',key:2}
+                        {type:'li',children:'C',key:3}
+                    ]
+                },
+                {type:'p',children:'A'},
+                {type:'p',children:'B'},
+                {type:'p',children:'C'},
+            ]
+        }
+        //虚拟节点最终状态
+        {
+            type:'div',
+            attrs:{},
+            props:{},
+            chilren:[
+                {type:'span',chilren:'100'}
+                {type:'strong',chilren:'1'}
+                 {
+                    type:'ul',
+                    chilren:[
+                        {type:'li',children:'A',key:1}
+                        {type:'li',children:'B',key:2}
+                        {type:'li',children:'C',key:3}
+                    ]
+                },
+                {type:'p',children:'C'},
+                {type:'p',children:'B'},
+                {type:'p',children:'A'},
+            ]
+        }
+    ```
+
+## day3-4
+
+### 知识点
+* 单页面应用SPA(Single Page Application)
+    > 整个应用只有一个页面
+    * 多视图的单页Web应用
+* 多页面应用MPA(Multiple Page Application)
+    > 传统效果，页面需要用链接进行跳转，跳转后页面会刷新
+
+* VueRoutr 路由
+    1. 安装vue-router
+        ```js
+            npm install vue-router
+        ```
+    2. 引入vue-router
+        ```js
+            import VueRouter from 'vue-router' 
+        ```
+    3. 安装路由插件
+        ```js
+            Vue.use(VueRouter)
+        ```
+    4. 实例化路由，并配置参数
+        ```js
+            const router = new VueRouter()
+        ```
+    5. 把路由实例注入Vue
+        > 注入后，会给所有的组件添加`$router`与`$route `属性
+        * $router:路由实例
+        * $route:当前路由对象（保存着路由所有信息）
+        ```js
+            new Vue({
+                ...
+                router:router
+            })
+        ```
+    6. 在组件中使用
+        * 使用`<router-view/>`显示路由组件
+        * 使用`<router-link/>`跳转路由
+    * hash（哈希路由）
+        > 根据hash值的变化显示不同的内容，实现单页面多视图的效果
+        * 原理：window下的hashchange事件
+    * 路由跳转(导航)
+        * 声明式导航：使用`<router-link/>`跳转路由
+        * 编程式导航：使用js代码实现导航
+            * $router
+                * push()        跳转并产生浏览记录(等效于：`<router-link to/>`)
+                * replace()     跳转但不产生浏览记录(等效于：`<router-link to replace/>`)
+                * back()        
+                * forward()
+                * go()
+            * $route
+        * 路由传参
+            > 从一个路由跳到另一个路由时携带参数
+            * query参数
+                > ?后的参数
+                * 传递:
+                    ```js
+                        $router.push('/search?keyword=xxx')
+                        $router.push({
+                            path:'/search',
+                            query:{
+                                keyword:'xx'
+                            }
+                        })
+                    ```
+                * 接收:`$route.query.keyword`
+            * params
+                > params参数在页面刷新后会丢失，动态路由例外
+                * 传递
+                    ```js
+                        //动态路由
+                        router.push('/goods/'+id)
+
+                        //必须使用对象形式
+                          $router.push({
+                            //params传参只支持name跳转
+                            name:'Goods'
+                            params:{
+                                id:'xxx'
+                            }
+                        })
+                    ```
+                * 接收：`$route.params.id`
+
+        * 命名路由：给路由起个名字
+            ```js
+                new VueRouter({
+                    routes:[
+                        {
+                            path:'/home',
+                            component:Home,
+                            name:'Home'
+                        }
+                    ]
+                })
+                $router.push({
+                    name:'Home'
+                })
+            ```
+
+* Vue的UI组件库
+    * elementUI     饿了么出品
+    * ant-design    蚂蚁金服
+    * iView         腾讯出品
+    * bootstrap-vue 
+    * vantUI        有赞
+        1. 安装
+            ```js
+                npm i vant
+            ```
+        2. 引入
+            * 全部引入
+            ```js
+                // 引入所有组件
+                import Vant from 'vant'
+
+                //引入样式
+                import 'vant/lib/index.css'
+            ```
+            * 按需引入
+        3. 安装插件
+            > 注册65+的全局组件
+            ```js
+                Vue.use(Vant)
+            ```
+
+* axios
+
+
+### 练习
+* 完成/goods页面
+* 完成注册、登录
+
+## day3-5
+
+### 面试题
+* Vue组件局部样式的原理
+    > 自定义属性(data-v-[hash]) +css属性选择器
+
+### 复习
+* 路由传参
+    * 跳转传参
+        * query
+            > 数据持久化
+        * params 
+            > 刷新后数据丢失（动态路由参数例外）
+* axios
+    > 基于promise的ajax请求封装
+    * 常用方法
+        * axios(config)
+        * get(url,config)
+        * post(url,data,config)
+        * put(url,data,config)/patch(url,data,config)
+        * delete(url,config)
+
+    * config
+        * url 
+        * method
+        * params    通过url传参(?号后的参数)
+        * data      通过请求体传参
+            * x-www-from-urlencoded     name=value&nanme=value
+            * json                      {"name":"value"}
+            * formData
+        * headers   通过请求体传参
+
+    * axios二次封装
+        * 所有的组件都是Vue的实例
+* 组件局部样式
+    > `<style scoped>`
+    * 原理：自定义属性(data-v-[hash])+css属性选择器
+        > Vue组件局部样式：给style添加scoped属性后，Vue组件在编译时会自动给当前组件所有元素添加`data-v-[hash]`属性，并把添加了scoped属性的style标签下的样式添加属性选择器进行精确匹配
+
+* 动态路由跳转
+    > /goods/6037755f08f65d3a6c243514（Goods） -> /goods/6037755f08f65d3a6c243516（Goods）
+    * 监听动态路由变化
+        * watch
+            * $route
+        * beforeRouteUpdate
+            > 在路由**变化前**自动执行
+
+* 路由守卫
+    > 类似于组件生命周期函数的钩子函数，与路由相关，只有在路由变化时才执行的函数
+    * 与生命周期函数的区别
+        * 生命周期函数：在组件创建、销毁、更新时执行
+        * 路由守卫：在路由跳转时执行
+    * 分类
+        * 组件内守卫
+            > 写在组件配置中
+            * beforRouteUpdate(to,form,next)    一般在路由发生变化且组件复用时触发（动态路由）
+            * beforRouteEnter(to,form,next)     进入当前路由时触发
+            * beforROuteLeave(to,form,next)     离开当前路由时触发
+        * 路由独享守卫
+            > 写在路由配置中
+            * beforEnter(to,from,next)
+        * 全局守卫
+            > 是路由实例的方法，一般写在路由配置文件中
+            * router.beforeEach(fn)
+                * to
+                * from
+                * next()
+            * router.afterEach(fn)
+                * to
+                * from
+            * router.beforeResolve(fn)
+                * to
+                * from
+                * next
+
+    * 参数
+        * to        目标路由对象（$route）
+        * from      来源路由对象（$route）
+        * next      是否放行
+    * 路由守卫应用
+        * 限制页面访问来源
+            * 商品页面只允许从首页、发现购物车、搜索等页面进入
+                > 在组件内守卫实现效果
+        * 页面需要登录后才能访问
+            > 在全局守卫中实现效果
+            * 校验用户身份：token（令牌）
+
+
+* 路由变化时组件渲染过程
+    > 路由切换(路由守卫) -> 组件渲染(生命周期函数)
+    * 正常切换：`/home (Home失活组件) -> /goods/1 (Goods激活组件)`
+        1. 导航被触发。
+        2. 在失活的组件里调用beforeRouteLeave离开守卫。
+        3. 调用全局的 beforeEach 守卫。
+        4. 在路由配置里调用 beforeEnter。
+        5. 解析异步路由组件。
+        6. 在被激活的组件里调用 beforeRouteEnter。
+        7. 调用全局的 beforeResolve 守卫 (2.5+)。
+        8. 导航被确认。
+        9. 调用全局的 afterEach 钩子。
+        10. 触发 DOM 更新。
+            > 执行组件生命周期函数
+    * 组件复用切换：`/goods (Goods) -> /goods/1 (Goods)`
+        1. 导航被触发。
+        2. 调用全局的 beforeEach 守卫。
+        3. 在重用的组件里调用 beforeRouteUpdate 守卫 (2.2+)
+        4. 解析异步路由组件。
+        5. 调用全局的 beforeResolve 守卫 (2.5+)。
+        6. 导航被确认。
+        7. 调用全局的 afterEach 钩子。
+        8. 触发 DOM 更新。
+            > 不会执行组件生命周期函数，需要手动处理页面刷新问题
+
+### 练习
+* 完成搜索、发现、购物车、注册页面
+
+
+## day4-1
+
+### 知识点
+* 路由重定向:redirect
+    * 404页面
+
+* 路由拦截
+    * 利用路由守卫实现页面访问权限款酷
+    *  用户身份证
+        > 在服务器中校验
+        * 用户名+密码
+            * 繁琐
+            * 增加服务器
+        * token令牌
+            > token:一串加密后的字符串，具有有效期
+            * 创建令牌：加密
+                > 在服务器创建，并发送给客户端保存
+            * 校验令牌：解密
+                > 在服务器校验，并返回校验结果给客户端
+            * 实现步骤
+                1. 用户第一次使用用户和密码登录，登录成功后，创建token，并返回给客户端
+                2. 客户端存储token到cookie或localStorage
+                3. 每次请求携带token发送给服务器校验（一般通过请求头发送token）
+                4. 服务器校验token，并返回校验结果
