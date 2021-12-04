@@ -1,0 +1,27 @@
+#app{
+    height: 100%;
+}
+.container{
+    height: 100%;
+}
+.active{color: red;}
+
+.login-from{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 300px;
+    padding: 1em;
+}
+.login-from h1{
+    text-align: center;
+}
+
+.text-right{
+    text-align: right;
+}
+.text-center{
+    text-align: center;
+}

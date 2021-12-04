@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03数据挂载方式</title>
+    <script src="../node_modules/react/umd/react.development.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+    <script src="./js/browser.js"></script>
+</head>
+
+<body>
+    <h1>03数据挂载方式</h1>
+    <div id="app">
+
+    </div>
+    <script type="text/babel">
+        const username = 'laoxie';
+        const content = <div>laoxie</div>
+        const users = ['laoxie','tiantian','jingjing','ouyang']
+        const user=[
+            {
+            username:'tiantian',
+            password:123,
+            role:'svip'
+        },
+            {
+            username:'laoxie',
+            password:123,
+            role:'admin'
+        },
+    ]
+        //渲染内容
+        ReactDOM.render(
+            <div id="box">
+                <p>用户名：{username}</p>
+                <div>
+                    {content}
+                </div>
+                {
+                    // <div>用户列表：{user}</div>
+                    // <div>用户列表：{users}</div>
+                }
+                {
+                    //列表渲染
+                    user.map(item=>{
+                        return <p key={item.username}>{item.username}</p>
+                    })
+                }
+            </div>
+            
+            ,
+            //渲染到哪
+            document.querySelector('#app')
+        )
+    </script>
+</body>
+
+</html>

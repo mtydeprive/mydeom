@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>过渡动画</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+    <style>
+        .box{
+            width: 100px;
+            height: 100px;
+            background:pink;
+        }
+        .box2{background:#58bc58;}
+        /* 入场动画：隐藏到显示的过程 */
+        .v-enter{opacity: 0;}
+        .v-enter-to{opacity: 1;}
+        .v-enter-active{transition:opacity 2s ;}
+
+        .swipe-enter{transform: translateX(-100%);}
+        .swipe-enter-to{transform:translateX(0);}
+        .swipe-enter-active{transition:transform 2s ease-in ;}
+        /*出场动画：显示->隐藏*/
+        .v-leave{opacity: 0;}
+        .v-leave-to{opacity: 1;}
+        .v-leave-active{transition:opacity 2s ;}
+
+        .swipe-leave{transform: translateX(0);}
+        .swipe-leave-to{transform:translateX(-100%);}
+        .swipe-leave-active{transition:transform 2s ease-in ;}
+    </style>
+</head>
+<body>
+    <h1>过渡动画</h1>
+    <div id="app">
+        <button @click="show=!show">动画效果</button>
+      <transition>
+          <div class="box" v-show="show"></div>
+      </transition>
+      <transition name="swipe">
+          <div class="box2 box" v-show="show"></div>
+      </transition>
+      <transition 
+      name="userdefine"
+      enter-class="animate__backInLeft"
+      enter-active-class="animate__animated"
+      enter-to-class="animate__backInLeft"
+  >
+      <div class="box" v-show="show"></div>
+  </transition>
+      <br>
+      <!-- <transition-group>
+          <div class="box" key="div"></div>
+          <p key="p">hell</p>
+      </transition-group> -->
+    </div> 
+    <script src="./js/vue.js"></script>
+    <script>
+        const vm=new Vue({
+            data:{
+               show:true
+            },
+           
+        })
+        vm.$mount('#app')
+
+ 
+    </script>
+</body>
+</html>

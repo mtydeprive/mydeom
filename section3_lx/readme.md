@@ -1666,3 +1666,895 @@
                 2. 客户端存储token到cookie或localStorage
                 3. 每次请求携带token发送给服务器校验（一般通过请求头发送token）
                 4. 服务器校验token，并返回校验结果
+* 多组件数据共享
+    * 共享购物车数据
+        * App
+        * Goods
+        * Cart
+    * 方案
+        * locaStorage
+        * vuex
+    * 多组件共享需要解决以下问题
+        1. 数据唯一性：一个应用中应该有一份共享的数据
+        2. 数据维护问题：方便实现数据的CRUD
+        3. 数据更新问题：在某个组件中更新数据，其他组件中的数据跟着改变
+        4. 组件刷新问题：数据有修改时，组件自动刷新
+* Vuex
+    > Vue的核心插件，用于实现数据共享（实现全局共享：所有的组件可以直接获取、修改、监听等操作）
+    * 使用步骤
+        1. 安装vuex
+            ```bash
+                npm install vuex
+            ```
+        2. 引入与安装插件
+            ```js
+                import Vuex from 'vuex'
+
+                Vue.use(Vuex);
+            ```
+        3. 实例化一个数据仓库store
+            > 设置核心配置
+            ```js
+                const store = new Vuex.Store({
+                    state:{
+                        cartlist:[]
+                    },
+                    mutations:{
+                        add(state,payload){
+                            // state:状态
+                            // payload：触发当前mutation是传入的参数
+                            state.cartlist.unshift(payload)
+                        }
+                    }
+                })
+            ```
+        4. 把store注入Vue根实例
+            > 注入store后，给每一组件实例添加`$store`属性
+            ```js
+                new Vue({
+                    ...,
+                    store:store
+                })
+            ```
+        5. 在组件中使用
+            * 读取数据:`this.$store.state.xxx`
+            * 修改数据:`this.$store.commit(mutation,payload)`
+            * 监听数据  
+                > vuex自定监听state状态修改，当state被修改时，组件会自动刷新
+
+    * 核心配置
+        * state 状态，类似与组件中的data，用于存放需要共享的数据
+            > 组件中获取：`this.$store.state`
+        * muations  修改state的唯一方法，类似于组件中的methods，用于修改state
+            > 调用方式：`shis.$store.commit(mutation)`
+            * 参数
+                * state     状态
+                * payload   调用时传入的参数
+            ```js
+                this.$store.commit('add')
+                this.$store.commit('add',{_id,goods_name,price})
+            ```
+* 数据持久化
+    > 利用本地存储技术实现数据长期存储方案
+
+## day4-2
+
+### 面试题
+* 重定向中301与302状态码有什么不同
+    * 301   代表永久重定向
+    * 302   代表临时重定向
+
+### 知识点
+* 核心配置
+    * state 状态，类似于组件中的data，用于存放需要共享的数据
+        * 获取方式：`store.state.xxx`
+    * muations  修改state的唯一方法，类似于组件中的methods，用于修改state
+        * 调用方式：`store.commit(mutation)`
+    * getters   类似于组件中的computed，一般用于根据state的值计算出其他值
+        * 参数  
+            1. state
+            2. getters
+        * 获取方式：`store.getters.xxx`
+
+    * actions 类似于mutation，一般用户异步操作
+        * 参数
+            * context   一个类似于store的对象，拥有与store几乎一致的属性、方法
+            * payload
+        * 调用方式：`store.dispatch(action)`
+
+* vuex的模块化
+    > 每个模块拥有自己的 state、mutations、actions、getters等，模块化默认只影响state的获取，mutations,actions,getters公用命名空间（getters有重名属性时报错，mutations,actions会变成一个数组）
+    * modules
+        * namespaced 命名空间
+            > 设置命名空间后，影响mutations,actions,getters的获取
+
+
+### 练习
+* 把用户信息写入vuex
+
+
+## day4-3
+
+### 复习
+* vuex
+    * 是什么
+    * 有什么用
+    * 怎么用
+* Vue核心配置
+    * state
+    * getters
+    * mutations
+    * actions
+    * modules       模块化
+        > 模块化默认只影响state的操作
+        ```js
+            store.state.xxx
+            store.state.[module].xxx
+        ```
+        * 命名空间
+            > 设置命名空间后，影响getters、mutations、actions的操作
+            ```js
+                store.getters.xxx -> store.getters['module/xxx']
+                store.commit('xxx') -> store.commit['module/xxx']
+                store.dispatch('xxx') -> store.dispatch['module/xxx']
+            ```
+
+### 知识点
+* Vuex映射
+    * 映射方法
+        * mapState(namespace?,data)      映射state到组件的computed
+        * mapGetters(namespace?,data)    映射getter到组件的computed
+        * mapMutations(namespace?,data)  映射mutation到组件的methods
+        * mapActions(namespace?,data)    映射action到组件的methods
+    * 解决了什么问题
+        * 方便获取vuex数据与方法的问题
+        * 代码可维护性的问题
+
+* Vue项目
+    * 项目要求
+    * 分工
+    * 项目前期准备工作
+    * git
+        * 远程仓库
+        * 代码冲突
+
+* 后台管理系统
+    * 必须登录后才能访问
+    * 页面访问权
+        * 先配置所有路由，然后通过路由守卫控制页面是否可访问
+        * 先配置基础路由，然后根据用户登录状态**动态添加路由**
+            * router.addRoute()
+            ```js
+                // 用户登录成功后，执行以下代码
+                router.addRoute({
+                    path:'/home',
+                    component:Home
+                })
+                router.addRoute('manage',{
+                    path:'/home',
+                    component:Home
+                })
+            ```
+
+* VueCLI创建的项目支持sass
+    * 依赖
+        * sass-loader@10.2.0
+        * sass(dart sass/node-sass(不推荐))
+
+* 嵌套路由（子路由）
+    * 配置children
+    * 嵌套<router-view/>
+
+* keep-alive
+    * 缓存组件（包括状态，滚动条位置等），不让组件销毁
+    * include:设置需要缓存的组件
+    * exclude：设置不需要缓存的组件
+
+* scrollBehavior
+    > 保持滚动条位置
+
+## day5-1
+
+### 知识点
+* 页面转场动画
+    > 过渡动画
+    * 进场动画：隐藏->显示
+    * 出场动画: 显示->隐藏
+* Vue的过渡动画
+    * `<transition/>`
+    * `<transition-group/>`
+    > transition与transition-group并没有实现具体的动画效果，需要用户自行实现
+    ```js
+        <transition>
+            <div></div>
+        </transition>
+        <transition-group>
+            <div></div>
+            <p></p>
+        </transition-group>
+    ```
+    * transition生效的条件（触发动画场景）
+        * 条件渲染（使用v-if）
+        * 条件展示（使用v-show）
+        * 动态组件
+            > 组件的内容不固定，根据不同的条件渲染不同的内容
+        * 组件根节点
+* Vue扩展
+    * 自定义组件
+        * 全局：Vue.component()
+        * 局部：components
+    * 自定义指令
+        > vue内置14个指令，如果还不够用，可以自定义
+        * 指令完整格式：v-name:arg.modiffer="value"
+            * name:指令名称
+            * arg：指令参数
+            * modiffer：指令修饰符
+            * value：指令值
+        * 全局指令：Vue.directive(name,options)
+        * 局部指令：directives(name,options)
+    * 过滤器filter
+        * 全局过滤器：Vue.filter(name,fn)
+        * 局部过滤器：filters(name,fn)
+        ```js
+            <div>{{msg|upper}}</div>
+            <div>{{upper(msg)}}</div>
+
+            {
+                filters:{
+                    upper:function(val){
+                        return val.toUpperCase()
+                    }
+                },
+                methods:{
+                    upper(val){
+                        return val.toUpperCase()
+                    }
+                }
+            }
+        ```
+    * mixin混合（提取组件的公共代码）
+        * 全局：Vue.mixin(options)
+        * 局部：mixins:[]
+        > 属性合并规则：mixin中的属性覆盖，方法与生命周期函数同时生效
+    * 插件plugin
+        * 使用插件：Vue.use()
+
+* 设置用户权限
+    * 页面访问权限
+        * 路由守卫
+        * 动态添加路由
+    * 按钮权限（功能权限）
+    * 数据权限
+
+* 项目上线要求
+    * 路由模式：mode
+        * history   更像一个网络（美）
+        * hash      路径带#号（丑）
+
+        ```js
+            // 运行 npm run serve: process.env.NODE_ENV的值为development
+            // 运行 npm run build: process.env.NODE_ENV的值为production
+            mode:process.env.NODE_ENV==='production'?'history':'hash'
+        ```
+
+
+## day5-3
+
+### 知识点
+* 版本  
+    * 按环境分
+        * development   开发环境（未压缩，有警告等提示）
+        * production    生产环境（压缩）
+    * 按模块分
+        * commonJS      cjs
+        * ESModule      es/esm
+        * AMD
+        * CMD
+        * UMD   通用模块化规范（支持commonJS，AMD，CMD，全局引用）
+    * 按构建方式分
+        * 完整版（编译器+运行时）
+        * 运行时版（runtime）
+    * react的使用
+        * 引入模块
+            * react
+            * react-dom/react-native
+        * 渲染
+            * ReactDOM.render(vNode,target)
+        * 创建节点
+            * React.createElement(type,props,children)
+    * JSX
+        > 浏览器不能识别JSX语法，必须使用babel去编译（把JSX编译成React.createElement()）
+        * JSX语法规范
+            * 属性中不能使用js关键字
+            * 属性必须采用驼峰写法
+            * 必须结束标签
+            * JSX中使用js：{}
+            * 注释
+                * 单行
+                * 多行
+            * 内联样式必须使用对象写法
+
+* react组件的数据绑定方式
+    * {}
+    * 列表循环
+        * map
+        * filter
+    * 事件绑定
+        > 格式：onClick={handle}
+        * 改变this指向
+            * render中使用箭头函数
+            * contructor中使用bind
+                > 通过bindg改变this指向只在第一次生效
+        * event事件对象：事件处理函数的最后一个参数
+        * 传参
+            * bind(taarget,arg...)
+    * 条件渲染：三元运算
+
+* 组件化
+    * 组件分类
+        > 在实际开发中优先使用函数组件
+        * 函数组件（无状态组件，UI组件）
+        * 类组件（状态组件，容器组件）
+    * 组件要求
+        * 组件首字母必须为大写
+        * 只能有一个根元素
+        * 类组件必须有一个render渲染函数
+    * 函数组件与类组件的区别
+        * 是否有状态：类组件有状态，函数组件无状态
+        * 是否有shis指向：类组件指向组件实例，函数组件指向undefined
+            > 默认在constructor，render、生命周期函数中可以直接使用this（自定义函数中没有this指向）
+
+* state：类组件中的状态
+    > state的改变（必须通过setState()修改）会自动刷新组件（刷新组件：类组件就是执行render函数，函数组件就是从头到尾执行一遍代码）
+    * 定义
+        ```js
+            constructor(){
+                super()
+                this.state={
+                    count:1,
+                    qty:10
+                }
+            }
+        ```
+    * 使用
+        ```js
+            this.state.count;
+        ```
+    * 修改：`this.setState({count:this.state.count+1})`
+        >在React中setState()是异步的，所以不能直接修改state，而是创建一个新的数据去覆盖它
+        ```js
+            //state={count:1,qty:10}
+            console.log(this.state.count);//1
+            //this.state.count++    不能让组件刷新
+            this.setState({
+                count:10
+            })
+            console.log(this.state.count);//1
+        ```
+    
+* 组件刷新
+    * 类组件：组件刷新就是重新执行render渲染函数
+    * 函数组件：代码从头到尾执行一遍
+
+* 组件通讯：
+    * 父->子：props
+        1. 给子组件定义属性
+        2. 在子组件中使用
+            * 函数组件:函数的第一个参数就是props
+            * 类组件：
+                * constructor的第一个参数
+                * this.props
+        * 子->父：
+            * 把父组件的方法通过props传到子组件中执行，并回传参数
+
+* ref
+    * 回调函数
+        > 函数的第一个参数为节点/组件实例的引用
+        ```js
+            <input ref={el=>this.input=el}/>
+        ```
+    * React.createRef()
+        > 通过ref对象的current属性获取到节点/组件实例
+        ```js
+            const refObj=React.cueateRef()
+            <input ref={refObj}/>
+
+            // 获取节点
+            refObj.current
+        ```
+
+* 受控组件与非受控组件
+    * 受控组件：通过组件的状态控制表单的内容
+        * 给表单的value属性绑定State，必须同时提供修改state的方法，否则会报错
+    * 非受控组件：通过节点操作方式控制表单内容的方式
+
+## day5-4
+
+### 知识点
+* 多层级组件通讯
+    * 逐层传递（不推荐）
+    * context
+        1. 创建context
+            ```js
+                const context=React.createContext(defaultValue)
+            ```
+        2. 父组件共享数据
+            > 使用context的Provider组件共享数据
+            ```js
+                // data为共享的数据
+                <context.Provider value={data}></context.Provider>
+            ```
+        3. 子组件接收
+            * 函数组件
+                * context的Consumer组件接收数据
+                ```js
+                    <context.Consumer>
+                    {
+                        (value)=>{
+                            //value为共享的数据
+                            return(
+
+                            )
+                        }
+                    }
+                    </context.Consumer>
+                ```
+                 * Hook
+                ```js
+                    const value=useContext(context)
+                ```
+            * 类组件
+                * Consumer
+                * contextType
+                    > 给类添加contextType静态属性，只适用于类组件
+                    ```js
+                        TodoForm.contextType=context;
+
+                        // 获取
+                        constructor //的第二个参数
+                        this.context
+                    ```
+
+* 构建工具
+    * grunt -> gulp -> webpack -> vite
+
+    * 传统js写法
+        > 全局引入
+        ```html
+            <script src="jquery.js"></script>
+            <script src="bootstrap.js"></script>
+            <script src="common.js"></script>
+            <script src="home.js"></script>
+        ```
+        * 污染全局命名空间与变量冲突
+        ```js
+            ;(()=>{
+                var a = 10
+            })()
+        ```
+    * 模块化
+        ```js
+            var a = 10;
+        ```
+        * import 
+        * export
+* webpack与gulp这两个构建工具的区别
+    * gulp基于任务且需要用户手动实现某个流程的构建工具
+    ```js
+        // gulp
+        gulp.task('compileSass',(done)=>{
+            // 匹配文件
+            gulp.src('./src/sass/*.scss')
+            .pipe(sass())
+            .pipe(gulp.dest('./dist'))
+            .pipe(cssmin())
+            .pipe(rename({sufix:'.min'}))
+            .pipe(gulp.dest('./dist'))
+        })
+    ```
+    * webpack基于配置的自动化构建工具
+        > webpack.config.js配置文件
+
+* 从0配置基于webpack的react项目环境
+    * 创建目录与文件
+        * src
+        * piblic
+        * dist
+        * doc
+        * webpack.config.js
+            > 一个遵循commonJS规范的模块
+        * package.json
+    * 安装依赖
+        * react + react-dom
+        * webpack + webpack-cli + webpack-dev-server + html-webpack-plugin
+        * @babel/preset-react + @babel/core + babel-loader 
+    * 配置webpack
+        > webpack.config.js
+        * mode      环境配置
+        * entry     入口配置
+        * outpu     出口配置
+        * loader    加载器
+            > module.rules,在webpack中每一种类型文件都需要一个加载器去处理
+        * plugins   插件配置
+    * 编译打包
+        * npm script
+
+### 练习
+* 从0配置基于webpack的Vue项目环境
+* 移植todolist到项目环境
+
+## day5-5
+
+### 知识点
+* 缓存对页面访问的影响，导致用户获取不到最新的代码
+    * 解决方案
+        * 给文件路由添加时间戳
+        * webpack
+            * output.filename
+            * urlLoad.name
+            * htmlwebpackPlugin
+* React组件生命周期
+    * 初始化阶段
+        > 初始化state,props等
+        * constructor(props,context)
+    * 挂载阶段
+        > 把虚拟节点渲染到真实节点
+        * componentWillMount() ->> UNSAFE_componentWillMount() (不推荐)
+        * componentDidMount()
+    * 更新阶段
+        * componentWillUpdate(nextProps, nextState) -> UNSAFE_componentWillUpdate() (不推荐)
+        * componentDidUpdate(prevProps, prevState)
+    * 销毁阶段
+        * componentWillUnmount()
+    * 特殊钩子函数
+        * shouldComponentUpdate(nextProps, nextState) 
+        * componentWillReceiveProps(nextProps) ->UNSAFE_componentWillReceiveProps() (不推荐)
+* 组件刷新
+    > 类组件更新就是执行render渲染函数，函数组件更新就是从头到尾执行所有代码
+    * 组件刷新条件
+        * state发生改变
+        * props发生改变
+        * 父组件刷新
+        * 强制刷新  this.forceUpdate()
+        ```js
+            <Parent/>
+                <Child index={idx}/>
+        ```
+* 组件性能优化
+    * shouldComponentUpdate
+    * PureComponent
+        > 一个做了shouldComponentUpdate优化后的组件
+
+## day6-1
+
+### 知识点
+* 组件封装
+    * button
+    * List
+* classnames模块的使用
+* props
+    * children  写在组件标签内部的内容
+        * String    文本
+        * Object    虚拟节点
+        * Array     多个虚拟节点组成的数组
+        * Function  类似于Vue中的作用域插槽
+            ```js
+                <Button>
+                    {
+                        function(){
+
+                        }
+                    }
+                </Button>
+            ```
+
+* Render Props
+    使用一个值为函数的props共享代码的简单技术,实现组件定义华效果
+    ```js
+        <Button renderHeader={(data)=>{
+            return <span></span>
+        }}>{(data)=>{
+                return '添加'
+            }
+        }<Button>
+    ```
+
+* props 类型校验
+    > 给组件添加静态属性`propTypes`，并使用`prop-types`进行类型设置
+    ```js
+        //Vue
+        {
+            props:{
+                datasource:{
+                    type:Array,
+                    required:true,
+                    default:10
+                }
+            }
+        }
+
+        // React:prop-types
+    ```
+
+* props默认值
+    > 给组件添加静态属性`defaultProps`
+
+* react-router
+    * vueRouter
+    ```js
+        // vue-router
+        new VueRouter({
+            routes:[
+                {path:'/home',component:Home}
+                {path:'/home',component:Home}
+                {path:'/home',component:Home}
+            ]
+        })
+        <router-view>
+    ```
+    * reactRouter:一切皆组件
+        ```js
+            <HashRouter>
+            <Route path="/home" component={Home}/ >
+            <Route path="/login" component={Login}/ >
+            <Route path="/reg">
+                <Reg/>
+            </Router>
+            </HashRouter>
+        ```
+    * 常用组件
+        * 路由类型
+            * HashRouter        hash
+            * BrowserRouter     history
+        * 路由渲染
+            * Route
+                * path
+                * component
+                * render
+                * exact
+            * Redirect
+                * from
+                * to
+                * exact
+            * Switch
+        * 路由导航
+            * 声明式导航
+                * Link
+                * NavLink
+            * 编程式导航
+                * history.push()        等效于`<link to>`
+                * history.replace()     等效于`<link to replace>`
+                * history.go()
+                * history.goBack()
+                * history.goForward()
+            * 如何获取history对象，location，match对象
+                * 使用Route的component属性渲染组件
+                    > history自动传入组件props
+                * withRouter高阶组件
+                    ```js
+                        App=withRouter(App)
+                    ```
+                * Hook：只适用于函数组件
+                    * useHistory()
+                    * useLocation()
+                    * useRouteMath()
+                    ```js
+                        const history=useHistory()
+                    ```
+
+## day6-2
+
+### 知识点
+* 高阶组件HOC(High Order Component)
+    > 高阶组件并不是一个React组件，而是一个函数（高阶函数，包装函数),接收一个参数，并返回一个新的组件
+    * 纯函数
+        * 不修改传入的参数
+        * 固定输入有固定输出
+
+    ```js
+        function square(num){
+            return num*num;
+        }
+
+        square(2);//4
+        square(2);//4
+        square(2);//4
+
+        function withRouter(InnerComponent){
+            return function(){
+                //想办法获取history,location,match
+                return <InnerComponent history={history} location={location} match={match}/>
+            }
+        }
+        withrouter(App);//包装后props中就有了history，location，match
+    ```
+    * 编写高阶组件方式
+        * 属性代理
+            > 使用高阶组件通过props获取需要的数据
+            * 封装一个获取本地存储用户数据的高阶组件：withUser
+            * 编写一个能获取本地存储所有数据的高阶组件：withStorage/withStorages
+        * 提取公共代码
+            * 页面访问权限控制
+        * 反向继承（了解）
+
+* 函数柯里化：利用多次函数执行收集不同类型参数然后统一处理的方式
+    ```js
+        function a(){
+            return function b(){
+
+            }
+        }
+    ```
+
+### 练习
+* 让withStorage支持多个数据获取
+    ```js
+        withStorage('userInfo','token')(Home)
+    ```
+* 实现Manage页面效果
+
+## day6-3
+
+### 知识点
+* css 模块化
+    * 通过文件名实现css模块化
+
+* 嵌套路由（子路由）
+    ```js
+        /manage/interview
+        <App>
+            <Manage>    -> <Route path component={Interview}>
+                <Interview>
+        /manage/interview/list
+        <App>
+            <Manage>     -> <Route path component={Interview}>
+                <Interview>     -> -> <Route path component={LIst}>
+                    <List>
+    ```
+
+* 后台管理系统
+    * Tabel
+    * Form
+        * 如何把数据写入表单
+
+* 路由传参
+    * search：问好后的参数
+        > 接收：location.search，需要手动处理
+        ```js
+            const query=new URLSearchParams(location.search)
+            query.get('id')
+        ```
+    * params动态路由
+        > 接收：match.params,自动格式化成对象
+    * state
+        > 接收：location.state,页面刷新数据丢失
+    * 自定义数据
+        > 接收：location.xxx ，页面刷新数据丢失
+
+## day6-4
+
+### 知识点
+
+* 全局状态管理工具
+    * mobx
+    * redux
+        > 无框架状态管理工具
+* react与redux
+    > 两个独立的产品，本身没有任何联系
+* redux使用步骤
+    1. 安装 `npm install redux`
+    2. 引入
+        ```js
+            import {createStore} from 'redux'
+        ``` 
+    3. 创建数据仓库（共享数据）
+        ```js
+            const state={}
+            const reducer=function(state,action){}
+            const store = createStore(reducer,state)
+        ```
+    4. 使用
+        * 获取state:store.getState()
+        * 修改state:store.dispatch(action)
+        * 监听state修改：store.subscribe(fn)
+            > 当state有修改时，自动执行fn函数
+* redux核心
+    * store   数据仓库
+    * state   全局共享状态（数据）
+    * reducer 修改状态的方法
+        > Reducer   必须是一个纯函数，用于修改state，接收state与action作为参数，用户不需要直接执行reducer，而是通过`store.dispatch(action)`间接触发reducer
+    * action
+        > 格式为：`{type,payload?}`的对象，通过store.dispatch(action)调用
+
+* 复习Vuex
+    ```js
+        const store = new Vuex.Store({
+            state:{
+
+            },
+            mutation:{
+                login(){},
+                logout(){},
+            },
+        })
+        //store.commit('login');store.commit({type:'login'})
+    ```
+* 在React中使用redux
+    * 需要
+        * 在多个组件中共享数据
+            * 在组件中获取redux数据
+            * 在组件中修改redux数据
+        * 如何刷新组件
+            * 当redux数据发生变化时需要刷新组件
+    * 直接在react中编写redux代码，会导致代码可维护性变差
+        > 如何解决：高阶组件
+* 组件刷新场景
+    * state改变
+    * props改变
+    * 父组件刷新
+    * 强制刷新
+
+### 练习
+* 编写升级版withRedux实现按需传递redux数据
+
+## day6-5
+
+### 复习
+* React与Redux的关系
+* redux使用步骤
+    1. 安装
+    2. 引用
+        ```js
+            import {createStore} from 'redux'
+        ```
+    3. 创建store
+        ```js
+            const store = createStore(reducer,state)
+        ```
+    4. 使用    
+        * 获取：store.getState()
+        * 修改: store.dispatch(action)
+        * 监听: store.subscribe(fn)
+* redxu核心ApI
+    * store
+    * state
+    * reducer
+        > 是一个纯函数，接收state与action作为参数，并返回一个新的state
+    * action    命令/动作
+* 关联React组件与Redux
+    * 考虑代码可维护性问题
+    * 考虑组件刷新问题
+        * 组件刷新场景
+    > 解决方案：高阶组件
+
+### 知识点
+* 编写withStore高阶组件
+    * 实现按需写入redux数据
+
+* react-redux 桥接工具
+    > 原理：利用context+高阶组件实现redux数据共享
+    * connect()     高阶组件
+    * Provider      context
+    * 使用步骤
+        1. 使用Provider组件共享store
+            ```js
+                <Provider store={store}>
+                    ...
+                </Provider>
+            ```
+        2. 使用connect高阶组件给目标组件传递redux数据
+            ```js
+                connect(mapStateToProps,mapDispatchToProps)(Manage)
+            ```
+            * hook
+                * useStore()
+                * useDispatch()
+                * useSelector(state=>{})
+
+* redux模块化（reducer模块）
+    >把复杂的reducer拆分成一个个小模块，然后使用combineReducers把多个reducer合并成一个reducer
+
+* action creator
+    > action构造器，一个用于创建action的函数
+
+    * bindActionCreators 一般用户简化代码

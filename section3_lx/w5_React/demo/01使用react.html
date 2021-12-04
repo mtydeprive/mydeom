@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01使用react</title>
+    <script src="../node_modules/react/umd/react.development.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+</head>
+<body>
+    <h1>01使用react</h1>
+    <div id="app">
+
+    </div>
+    <script>
+        //渲染内容
+        ReactDOM.render(
+            // 渲染什么
+            //<div id="box" class="box">hello</div>
+            // React.createElement('div',{id:'box',className:'box',a:10},'hello react')
+            // <div id="box"><h4>列表</h4><ul class="list"><li>data1<li><li>data2<li></ul></div>
+            React.createElement('div',{id:'box',className:'box'},[
+                React.createElement('h4',null,'列表'),
+                React.createElement('ul',{className:'list'},[
+                    React.createElement('li',null,'data1'),
+                    React.createElement('li',null,'data1'),
+                ])
+            ])
+            ,
+            //渲染到哪
+            document.querySelector('#app')
+        )
+                
+    </script>
+</body>
+</html>

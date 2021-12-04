@@ -276,17 +276,17 @@
                     }
                 },
                 //全选
-                selectAll(all){
-                    if(all){
-                        //由于是通过provide/inject传入的值所有以下写法达不到响应式结果
-                        // this.selectIds=this.datalist.map(item=>item.id)
-                        const ids=this.datalist.map(item=>item.id)
-                        this.selectIds.splice(0,this.selectIds.length)
-                        this.selectIds.push(...ids)
-                    }else{
-                        this.selectIds.splice(0,this.selectIds.length)
-                    }
-                },
+                // selectAll(all){
+                //     if(all){
+                //         //由于是通过provide/inject传入的值所有以下写法达不到响应式结果
+                //         // this.selectIds=this.datalist.map(item=>item.id)
+                //         const ids=this.datalist.map(item=>item.id)
+                //         this.selectIds.splice(0,this.selectIds.length)
+                //         this.selectIds.push(...ids)
+                //     }else{
+                //         this.selectIds.splice(0,this.selectIds.length)
+                //     }
+                // },
                 //批量完成
                 completeItems(){
                     this.datalist.forEach(item=>{

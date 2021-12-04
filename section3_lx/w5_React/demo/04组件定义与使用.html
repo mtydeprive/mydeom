@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04组件定义与使用</title>
+    <script src="../node_modules/react/umd/react.development.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+    <script src="./js/browser.js"></script>
+</head>
+
+<body>
+    <h1>04组件定义与使用</h1>
+    <div id="app">
+
+    </div>
+    <script type="text/babel">
+        /**
+         * 函数组件
+         * 类组件
+         */ 
+        function List(){
+            return (
+                <React.Fragment><div className="list">List</div>
+                <span></span>
+                </React.Fragment>
+                )
+        }
+        class Table extends React.Component{
+            render(){
+                return (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>用户名</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>laoxie</td>
+                                <td><button>删除</button></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>tiantian</td>
+                                <td><button>删除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                )
+            }
+        }
+     ReactDOM.render(
+        <div className='container'>
+            <List></List>
+            <Table></Table>
+        </div>
+         ,
+         document.querySelector('#app')
+     )
+    </script>
+</body>
+
+</html>

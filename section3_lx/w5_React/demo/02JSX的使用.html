@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02JSX的使用</title>
+    <script src="../node_modules/react/umd/react.development.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+    <script src="./js/browser.js"></script>
+</head>
+<body>
+    <h1>02JSX的使用</h1>
+    <div id="app">
+
+    </div>
+    <script type="text/babel">
+        const username='laoxie';
+        const content=<div>laoxie</div>;//React.createElement('div',null,'laoxie')
+        console.log('content',content);
+        const myStyle={color:'#58bc58'}
+        //渲染内容
+        ReactDOM.render(
+            // 渲染什么
+            //<div id="box" class="box">hello</div>
+            // React.createElement('div',{id:'box',className:'box',a:10},'hello react')
+            <div id="box">
+               {
+                  <h4 title={username} style={myStyle}>列表{username}</h4> 
+               } 
+                <ul className="list">
+                    <li>data1</li>
+                    <li>data2</li>
+                </ul>
+                <label htmlFor="username">用户名：</label><input type="text" id="username" autoFocus/>
+                <img src="" alt=""/>
+            </div>
+            //以上JSX代码被babel编译成以下代码
+            // React.createElement('div',{id:'box',className:'box'},[
+            //     React.createElement('h4',null,'列表'),
+            //     React.createElement('ul',{className:'list'},[
+            //         React.createElement('li',null,'data1'),
+            //         React.createElement('li',null,'data1'),
+            //     ])
+            // ])
+            ,
+            //渲染到哪
+            document.querySelector('#app')
+        )
+    </script>
+</body>
+</html>
